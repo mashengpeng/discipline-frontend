@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <router-view/>
+login
 </template>
 
 <style scoped>

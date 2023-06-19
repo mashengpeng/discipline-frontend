@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <router-view/>
+404
 </template>
 
 <style scoped>
