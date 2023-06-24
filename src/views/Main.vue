@@ -1,14 +1,38 @@
 <template>
   <a-layout>
-    <a-layout-header class="bg-amber-50">Header</a-layout-header>
-    <a-layout class="flex">
-      <a-layout-sider class="bg-amber-50">Sider</a-layout-sider>
-      <a-layout-content class="h-screen"><router-view></router-view></a-layout-content>
+    <a-layout-header class="bg-amber-50 h-[50px] flex justify-center p-0">
+      <a-menu mode="horizontal" class="w-screen flex justify-center h-[50px] leading-3" theme="light"
+              @click="jump_page">
+        <a-menu-item key="home">
+          首页
+        </a-menu-item>
+        <a-menu-item key="todo">
+          代办事项
+        </a-menu-item>
+        <a-menu-item key="article">
+          文章
+        </a-menu-item>
+        <a-menu-item key="question">
+          题目
+        </a-menu-item>
+      </a-menu>
+    </a-layout-header>
+    <a-layout class="flex h-[calc(100vh-100px)] overflow-y-scroll justify-center w-screen items-center">
+      <router-view></router-view>
     </a-layout>
-    <a-layout-footer>Footer</a-layout-footer>
+    <a-layout-footer class="bg-amber-50 h-[50px]"></a-layout-footer>
   </a-layout>
 </template>
-<script>
+<script setup>
+import {onBeforeRouteUpdate, useRouter} from "vue-router";
+
+const router = useRouter();
+
+const jump_page = (x) => {
+  router.push({
+    name: x.key
+  })
+}
 </script>
 <style>
 
