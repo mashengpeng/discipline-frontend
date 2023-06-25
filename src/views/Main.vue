@@ -9,7 +9,7 @@
         <a-menu-item key="todo">
           代办事项
         </a-menu-item>
-        <a-menu-item key="article">
+        <a-menu-item key="articleList">
           文章
         </a-menu-item>
         <a-menu-item key="question">
@@ -17,7 +17,8 @@
         </a-menu-item>
       </a-menu>
     </a-layout-header>
-    <a-layout class="flex h-[calc(100vh-100px)] overflow-y-scroll justify-center w-screen items-center">
+    <!--    <a-layout class="flex h-[calc(100vh-100px)] overflow-y-scroll justify-center w-screen items-center">-->
+    <a-layout class="h-[calc(100vh-100px)] overflow-y-scroll">
       <router-view></router-view>
     </a-layout>
     <a-layout-footer class="bg-amber-50 h-[50px]"></a-layout-footer>

@@ -15,7 +15,13 @@ const mainRoutes = {
     children: [
         {path: '/', component: () => import('@/views/Home.vue'), name: 'home', meta: {title: '首页'}},
         {path: '/todo', component: () => import('@/views/Todo.vue'), name: 'todo', meta: {title: '代办事项'}},
-        {path: '/article', component: () => import('@/views/Article.vue'), name: 'article', meta: {title: '文章'}},
+        {
+            path: '/article/list',
+            component: () => import('@/views/ArticleList.vue'),
+            name: 'articleList',
+            meta: {title: '文章'}
+        },
+        {path: '/article/:id', component: () => import('@/views/Article.vue'), name: 'article', meta: {title: '文章'}},
         {path: '/question', component: () => import('@/views/Question.vue'), name: 'question', meta: {title: '题目'}},
     ],
 }
