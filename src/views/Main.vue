@@ -18,8 +18,11 @@
       </a-menu>
     </a-layout-header>
     <!--    <a-layout class="flex h-[calc(100vh-100px)] overflow-y-scroll justify-center w-screen items-center">-->
-    <a-layout class="h-[calc(100vh-100px)] overflow-y-scroll">
-      <router-view></router-view>
+    <a-layout class="h-[calc(100vh-100px)] bg-red-900">
+      <div class="bg-amber-200 ml-96 mr-96 pl-16 pr-16 h-full overflow-auto">
+        <router-view></router-view>
+      </div>
+
     </a-layout>
     <a-layout-footer class="bg-amber-50 h-[50px]"></a-layout-footer>
   </a-layout>

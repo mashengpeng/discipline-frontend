@@ -1,23 +1,22 @@
 <template>
-  <div class="flex justify-center items-center h-full w-full">
-    <a-card title="文章" class="xs:w-full sm:w-full md:w-3/4 lg:w-1/2 h-5/6 shadow-2xl">
-      <template #extra>
-        <a-space>
-          <a-button @click="edit">写文章</a-button>
-        </a-space>
+  <div>
+
+    <a-space>
+      <a-button @click="edit">写文章</a-button>
+    </a-space>
+
+    <a-list item-layout="horizontal" :data-source="data">
+      <template #renderItem="{ item }">
+        <a-list-item class="w-[60vw] pb-10" @click="jump_to_article_detail(item.id)">
+          <a-list-item-meta :description="`标签:${item.tag}  作者:${item.author}`">
+            <template #title>
+              {{ item.title }}
+            </template>
+          </a-list-item-meta>
+        </a-list-item>
       </template>
-      <a-list item-layout="horizontal" :data-source="data">
-        <template #renderItem="{ item }">
-          <a-list-item class="w-[60vw] pb-10" @click="jump_to_article_detail(item.id)">
-            <a-list-item-meta :description="`标签:${item.tag}  作者:${item.author}`">
-              <template #title>
-                {{ item.title }}
-              </template>
-            </a-list-item-meta>
-          </a-list-item>
-        </template>
-      </a-list>
-    </a-card>
+    </a-list>
+
   </div>
 
 </template>
