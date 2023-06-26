@@ -8,12 +8,21 @@
         <el-menu-item index="/question" class="flex-1">题目</el-menu-item>
       </el-menu>
     </el-header>
-    <el-main class="h-[calc(100vh-100px)] p-0">
-      <div class="xl:ml-96 xl:mr-96 p-8 h-full overflow-auto bg-amber-50">
-        <router-view></router-view>
-      </div>
+    <el-main class="p-0 h-[calc(100vh-100px)]  shadow-2xl">
+      <el-scrollbar>
+        <div class="xl:ml-96 xl:mr-96 p-8 min-h-[calc(100vh-100px)] shadow-2xl">
+          <router-view></router-view>
+        </div>
+        <el-backtop :right="40" :bottom="80" target=".el-scrollbar__wrap"/>
+      </el-scrollbar>
     </el-main>
-    <el-footer class="p-0 h-[50px]">Footer</el-footer>
+    <el-footer class="p-0 h-[50px] flex justify-center bg-white border">
+      <el-space>
+        <el-link href="https://github.com/" target="_blank">github</el-link>
+        <el-link href="https://gitlab.com/" target="_blank">gitlab</el-link>
+      </el-space>
+
+    </el-footer>
   </el-container>
 
 </template>
@@ -22,11 +31,7 @@ import {onBeforeRouteUpdate, useRouter} from "vue-router";
 
 const router = useRouter();
 
-const jump_page = (x) => {
-  router.push({
-    name: x.key
-  })
-}
+
 </script>
 <style scoped>
 </style>
