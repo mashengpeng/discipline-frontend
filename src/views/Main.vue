@@ -1,31 +1,21 @@
 <template>
-  <a-layout>
-    <a-layout-header class="bg-amber-50 h-[50px] flex justify-center p-0">
-      <a-menu mode="horizontal" class="w-screen flex justify-center h-[50px] leading-3" theme="light"
-              @click="jump_page">
-        <a-menu-item key="home">
-          首页
-        </a-menu-item>
-        <a-menu-item key="todo">
-          代办事项
-        </a-menu-item>
-        <a-menu-item key="articleList">
-          文章
-        </a-menu-item>
-        <a-menu-item key="question">
-          题目
-        </a-menu-item>
-      </a-menu>
-    </a-layout-header>
-    <!--    <a-layout class="flex h-[calc(100vh-100px)] overflow-y-scroll justify-center w-screen items-center">-->
-    <a-layout class="h-[calc(100vh-100px)] bg-red-900">
-      <div class="bg-amber-200 ml-96 mr-96 pl-16 pr-16 h-full overflow-auto">
+  <el-container>
+    <el-header class="flex justify-center p-0 h-[50px]">
+      <el-menu mode="horizontal" router :ellipsis="false" class="w-full xl:pl-96 xl:pr-96">
+        <el-menu-item index="/" class="flex-1">首页</el-menu-item>
+        <el-menu-item index="/todo" class="flex-1">代办事项</el-menu-item>
+        <el-menu-item index="/article/list" class="flex-1">文章</el-menu-item>
+        <el-menu-item index="/question" class="flex-1">题目</el-menu-item>
+      </el-menu>
+    </el-header>
+    <el-main class="h-[calc(100vh-100px)] p-0">
+      <div class="xl:ml-96 xl:mr-96 p-8 h-full overflow-auto bg-amber-50">
         <router-view></router-view>
       </div>
+    </el-main>
+    <el-footer class="p-0 h-[50px]">Footer</el-footer>
+  </el-container>
 
-    </a-layout>
-    <a-layout-footer class="bg-amber-50 h-[50px]"></a-layout-footer>
-  </a-layout>
 </template>
 <script setup>
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
@@ -38,6 +28,5 @@ const jump_page = (x) => {
   })
 }
 </script>
-<style>
-
+<style scoped>
 </style>
