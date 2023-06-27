@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="添加代办" v-model="visible">
+  <el-dialog title="添加代办" v-model="visible" draggable @close="cancel">
     <el-form :model="todoItem">
       <el-form-item label="事项" class="ml-16 mr-16">
         <el-input v-model="todoItem.title" autocomplete="off" clearable></el-input>
@@ -22,55 +22,66 @@
     </el-form>
     <template #footer>
     <span class="dialog-footer">
-      <el-button @click="visible = false">取 消</el-button>
-      <el-button @click="addTodoItem">确 定</el-button>
+<!--      <el-button @click="cancel">取 消</el-button>-->
+      <el-button @click="upsertItem">确 定</el-button>
     </span>
     </template>
   </el-dialog>
 
-  <el-button @click="visible = true">添加</el-button>
+  <div class="flex justify-between">
+    <el-tabs @tab-click="tabChange" v-model="route.params.status" class="flex flex-1">
+      <el-tab-pane label="待完成" name="undone"></el-tab-pane>
+      <el-tab-pane label="已完成" name="done"></el-tab-pane>
+      <el-tab-pane label="已过期" name="expired"></el-tab-pane>
+    </el-tabs>
+    <el-button @click="visible = true" :icon="Plus" size="large"></el-button>
+  </div>
 
-  <el-tabs @tab-click="tabChange" v-model="route.params.status">
-    <el-tab-pane label="待完成" name="undone"></el-tab-pane>
-    <el-tab-pane label="已完成" name="done"></el-tab-pane>
-    <el-tab-pane label="已过期" name="expired"></el-tab-pane>
-  </el-tabs>
-  <el-space class="flex flex-col items-stretch w-full" fill :fill-ratio="50">
-    <el-descriptions :title="todo.title" v-for="todo in data" class="w-full" border :column="3">
-      <template #extra>
-        <el-button @click="completeItem(todo.id)">完成</el-button>
-        <el-button @click="deleteItem(todo.id)">删除</el-button>
+
+  <el-table :data="data">
+    <el-table-column prop="title" label="事项"/>
+    <el-table-column prop="description" label="描述"/>
+    <el-table-column prop="duration" label="持续时间"/>
+    <el-table-column prop="deadline" label="倒计时">
+      <template #default="scope">
+        <el-countdown :value="dayjs(scope.row.deadline)" v-if="scope.row.deadline && scope.row.deadline >= dayjs()"/>
+        <div v-else/>
       </template>
-      <el-descriptions-item label="描述" span="3">{{ todo.description }}</el-descriptions-item>
-      <el-descriptions-item label="持续时间">{{ todo.duration }}</el-descriptions-item>
-      <el-descriptions-item label="截止时间">{{ todo.deadline }}</el-descriptions-item>
-    </el-descriptions>
-  </el-space>
+    </el-table-column>
+    <el-table-column fixed="right" label="操作" width="250">
+      <template #default="scope">
+        <el-button @click="completeItem(scope.row.id)">完成</el-button>
+        <el-button @click="editItem(scope.row)">编辑</el-button>
+        <el-button @click="deleteItem(scope.row.id)">删除</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
 
 
 </template>
 <script setup>
 import myAxios from "@/utils/httpRequest";
-import {reactive, ref} from "vue";
+import {reactive, ref, toRaw} from "vue";
 import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
+import {dayjs} from 'element-plus'
+import {Plus} from '@element-plus/icons-vue'
 
 const route = useRoute();
 const router = useRouter();
+
 
 const data = ref([]);
 const visible = ref(false);
 const todoItem = ref({})
 
-const tabChange = (e)=>{
-  // console.log(e.paneName);
+const tabChange = (e) => {
   router.push(`/todo/${e.paneName}`)
 }
 
 const loadData = (status) => {
   myAxios.get(`/todo/${status}`).then(
       (res) => {
-        console.log(res)
-        data.value = res.data;
+        data.value = res.data
       },
       () => {
       }
@@ -85,16 +96,23 @@ onBeforeRouteUpdate((to, from, next) => {
 
 loadData(route.params.status);
 
-const addTodoItem = () => {
-  console.log(todoItem.value)
-  myAxios.post("/todo/add", todoItem.value).then(
+const cancel = () => {
+  visible.value = false;
+  todoItem.value = {}
+}
+
+
+const upsertItem = () => {
+  const deadline = todoItem.value.deadline;
+  const upload = {...todoItem.value, deadline: deadline ? dayjs(deadline).valueOf() : null}
+  console.log(upload)
+  myAxios.post("/todo/upsert", upload).then(
       (res) => {
         console.log(res)
         data.value = res.data;
         visible.value = false
         todoItem.value = {}
         loadData(route.params.status);
-
       },
       () => {
       }
@@ -120,6 +138,12 @@ const deleteItem = (id) => {
       () => {
       }
   );
+}
+
+const editItem = (row) => {
+  console.log(toRaw(row))
+  todoItem.value = {...row};
+  visible.value = true
 }
 
 </script>
