@@ -22,14 +22,13 @@
     </el-form>
     <template #footer>
     <span class="dialog-footer">
-<!--      <el-button @click="cancel">取 消</el-button>-->
       <el-button @click="upsertItem">确 定</el-button>
     </span>
     </template>
   </el-dialog>
 
   <div class="flex justify-between">
-    <el-tabs @tab-click="tabChange" v-model="route.params.status" class="flex flex-1">
+    <el-tabs @tab-click="tabChange" class="flex flex-1" v-model="activeTab">
       <el-tab-pane label="待完成" name="undone"></el-tab-pane>
       <el-tab-pane label="已完成" name="done"></el-tab-pane>
       <el-tab-pane label="已过期" name="expired"></el-tab-pane>
@@ -61,25 +60,29 @@
 </template>
 <script setup>
 import myAxios from "@/utils/httpRequest";
-import {reactive, ref, toRaw} from "vue";
+import {nextTick, reactive, ref, toRaw} from "vue";
 import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
 import {dayjs} from 'element-plus'
 import {Plus} from '@element-plus/icons-vue'
 
 const route = useRoute();
 const router = useRouter();
-
+const activeTab = ref("undone")
 
 const data = ref([]);
 const visible = ref(false);
 const todoItem = ref({})
 
-const tabChange = (e) => {
-  router.push(`/todo/${e.paneName}`)
+const tabChange = () => {
+  nextTick(()=>{
+    loadData()
+  })
+
 }
 
-const loadData = (status) => {
-  myAxios.get(`/todo/${status}`).then(
+const loadData = () => {
+  console.log(activeTab.value)
+  myAxios.get(`/todo/${activeTab.value}`).then(
       (res) => {
         data.value = res.data
       },
@@ -89,12 +92,12 @@ const loadData = (status) => {
 }
 
 
-onBeforeRouteUpdate((to, from, next) => {
-  loadData(to.params.status);
-  next()
-});
+// onBeforeRouteUpdate((to, from, next) => {
+//   loadData(to.params.status);
+//   next()
+// });
 
-loadData(route.params.status);
+loadData();
 
 const cancel = () => {
   visible.value = false;
@@ -112,7 +115,7 @@ const upsertItem = () => {
         data.value = res.data;
         visible.value = false
         todoItem.value = {}
-        loadData(route.params.status);
+        loadData();
       },
       () => {
       }
@@ -123,7 +126,7 @@ const completeItem = (id) => {
   myAxios.post(`/todo/complete/${id}`).then(
       (res) => {
         console.log(res)
-        loadData(route.params.status);
+        loadData();
       },
       () => {
       }
@@ -133,7 +136,7 @@ const deleteItem = (id) => {
   myAxios.post(`/todo/delete/${id}`).then(
       (res) => {
         console.log(res)
-        loadData(route.params.status);
+        loadData();
       },
       () => {
       }

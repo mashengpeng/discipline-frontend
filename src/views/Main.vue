@@ -8,7 +8,7 @@
                :default-active="route.path"
       >
         <el-menu-item index="/" class="flex-1">首页</el-menu-item>
-        <el-menu-item index="/todo/undone" class="flex-1">代办事项</el-menu-item>
+        <el-menu-item index="/todo" class="flex-1">代办事项</el-menu-item>
         <el-menu-item index="/article/list" class="flex-1">文章</el-menu-item>
         <el-menu-item index="/question" class="flex-1">题目</el-menu-item>
       </el-menu>

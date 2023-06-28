@@ -14,7 +14,7 @@ const mainRoutes = {
     meta: {title: '主入口整体布局'},
     children: [
         {path: '/', component: () => import('@/views/Home.vue'), name: 'home', meta: {title: '首页'}},
-        {path: '/todo/:status', component: () => import('@/views/Todo.vue'), name: 'todo', meta: {title: '代办事项'}},
+        {path: '/todo', component: () => import('@/views/Todo.vue'), name: 'todo', meta: {title: '代办事项'}},
         {
             path: '/article/list',
             component: () => import('@/views/ArticleList.vue'),
