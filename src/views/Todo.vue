@@ -50,9 +50,10 @@
     </el-table-column>
     <el-table-column fixed="right" label="操作" width="240px" align="right">
       <template #default="scope">
-        <el-button type="primary" plain @click="completeItem(scope.row.id)" v-show="activeTab === 'undone'">完成</el-button>
+        <el-button type="primary" plain @click="completeItem(scope.row.id)" v-show="activeTab === 'undone'">完成
+        </el-button>
         <el-button type="success" plain @click="editItem(scope.row)" v-show="activeTab === 'undone'">编辑</el-button>
-        <el-button type="danger" plain @click="deleteItem(scope.row.id)" >删除</el-button>
+        <el-button type="danger" plain @click="deleteItem(scope.row.id)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -77,25 +78,33 @@ const todoItem = ref({})
 
 const shortcuts = [
   {
+    text: '今晚24点',
+    value: dayjs().add(1, 'd').startOf('d')
+  },
+  {
+    text: '本周末',
+    value: dayjs().add(1, 'w').startOf('w')
+  },
+  {
+    text: '本月末',
+    value: dayjs().add(1, 'M').startOf('M')
+  },
+  {
     text: '24小时后',
-    value: () => {
-      const date = new Date()
-      date.setTime(date.getTime() + 3600 * 1000 * 24)
-      return date
-    },
+    value: dayjs().add(1, 'd')
+  },
+  {
+    text: '3天后',
+    value: dayjs().add(3, 'd')
   },
   {
     text: '7天后',
-    value: () => {
-      const date = new Date()
-      date.setTime(date.getTime() + 3600 * 1000 * 24 * 7)
-      return date
-    },
+    value: dayjs().add(7, 'd')
   },
 ]
 
 const tabChange = () => {
-  nextTick(()=>{
+  nextTick(() => {
     router.push({path: '/todo', query: {tab: activeTab.value}})
   })
 }
@@ -109,10 +118,9 @@ const loadData = () => {
       }
   );
 }
-watchEffect(()=>{
+watchEffect(() => {
   loadData()
 })
-
 
 
 const cancel = () => {

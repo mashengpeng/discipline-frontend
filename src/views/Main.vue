@@ -16,7 +16,7 @@
     <el-main class="p-0 h-[calc(100vh-100px)]">
       <el-scrollbar>
         <div
-            class="sm:ml-16 sm:mr-16 md:ml-32 md:mr-32 lg:ml-48 lg:mr-48  xl:ml-64 xl:mr-64 2xl:ml-96 2xl:mr-96 me-1 pl-32 pr-32 pt-16 min-h-[calc(100vh-100px)] lg:shadow-2xl">
+            class="sm:ml-16 sm:mr-16 md:ml-32 md:mr-32 lg:ml-48 lg:mr-48  xl:ml-64 xl:mr-64 2xl:ml-96 2xl:mr-96 sm:pl-32 sm:pr-32 sm:pt-16 min-h-[calc(100vh-100px)] lg:shadow-2xl">
           <router-view></router-view>
         </div>
         <el-backtop :right="40" :bottom="80" target=".el-scrollbar__wrap"/>
