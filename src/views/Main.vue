@@ -11,6 +11,7 @@
         <el-menu-item index="/todo" class="flex-1">代办事项</el-menu-item>
         <el-menu-item index="/article/list" class="flex-1">文章</el-menu-item>
         <el-menu-item index="/question" class="flex-1">题目</el-menu-item>
+        <el-menu-item index="/login" class="flex-1" @click="logout">注销</el-menu-item>
       </el-menu>
     </el-header>
     <el-main class="p-0 h-[calc(100vh-100px)]">
@@ -34,10 +35,25 @@
 </template>
 <script setup>
 import {useRoute, useRouter} from "vue-router";
+import http from '@/utils/http'
+import {ElNotification} from 'element-plus'
 
 const router = useRouter();
 const route = useRoute();
 
+const logout = () => {
+  http.get("/user/logout").then(
+      (res) => {
+        ElNotification({
+          title: '注销成功',
+          type: 'info',
+          duration: 1000
+        });
+      },
+      () => {
+      }
+  );
+}
 
 </script>
 <style scoped>
