@@ -61,7 +61,7 @@
 
 </template>
 <script setup>
-import myAxios from "@/utils/http";
+import http from "@/utils/http";
 import {nextTick, reactive, ref, toRaw, watchEffect} from "vue";
 import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
 import {dayjs} from 'element-plus'
@@ -118,7 +118,7 @@ const tabChange = () => {
 }
 
 const loadData = () => {
-  myAxios.get(`/todo/${activeTab.value}`).then(
+  http.get(`/todo/${activeTab.value}`).then(
       (res) => {
         data.value = res.data
       },
@@ -144,7 +144,7 @@ const upsertItem = (formEl) => {
       console.log('success')
       const deadline = todoItem.value.deadline;
       const upload = {...todoItem.value, deadline: deadline ? dayjs(deadline).valueOf() : null}
-      myAxios.post("/todo/upsert", upload).then(
+      http.post("/todo/upsert", upload).then(
           (res) => {
             data.value = res.data;
             visible.value = false
@@ -162,7 +162,7 @@ const upsertItem = (formEl) => {
 }
 
 const completeItem = (id) => {
-  myAxios.post(`/todo/complete/${id}`).then(
+  http.post(`/todo/complete/${id}`).then(
       (res) => {
         console.log(res)
         loadData();
@@ -172,7 +172,7 @@ const completeItem = (id) => {
   );
 }
 const deleteItem = (id) => {
-  myAxios.post(`/todo/delete/${id}`).then(
+  http.post(`/todo/delete/${id}`).then(
       (res) => {
         console.log(res)
         loadData();
