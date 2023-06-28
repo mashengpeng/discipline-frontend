@@ -1,16 +1,16 @@
 <template>
   <el-dialog title="添加代办" v-model="visible" draggable @close="cancel">
-    <el-form :model="todoItem">
-      <el-form-item label="事项" class="ml-16 mr-16">
-        <el-input v-model="todoItem.title" autocomplete="off" clearable></el-input>
+    <el-form :model="todoItem" ref="formRef" :rules="rules">
+      <el-form-item label="事项" class="ml-16 mr-16" prop="title">
+        <el-input v-model="todoItem.title" autocomplete="off" clearable :minlength="0"></el-input>
       </el-form-item>
-      <el-form-item label="描述" class="ml-16 mr-16">
+      <el-form-item label="描述" class="ml-16 mr-16" prop="description">
         <el-input v-model="todoItem.description" autocomplete="off" clearable></el-input>
       </el-form-item>
-      <el-form-item label="持续时间" class="ml-16 mr-16">
+      <el-form-item label="持续时间" class="ml-16 mr-16" prop="duration">
         <el-input v-model="todoItem.duration" autocomplete="off" clearable></el-input>
       </el-form-item>
-      <el-form-item label="截止日期" class="ml-16 mr-16">
+      <el-form-item label="截止日期" class="ml-16 mr-16" prop="deadline">
         <el-date-picker
             time-arrow-control
             v-model="todoItem.deadline"
@@ -23,7 +23,7 @@
     </el-form>
     <template #footer>
     <span class="dialog-footer">
-      <el-button @click="upsertItem">确 定</el-button>
+      <el-button @click="upsertItem(formRef)">确 定</el-button>
     </span>
     </template>
   </el-dialog>
@@ -75,6 +75,14 @@ const data = ref([]);
 const visible = ref(false);
 const todoItem = ref({})
 
+
+const formRef = ref()
+
+const rules = reactive({
+  title: [
+    {required: true, message: '请输入代办事项', trigger: 'blur'},
+  ],
+})
 
 const shortcuts = [
   {
@@ -129,19 +137,28 @@ const cancel = () => {
 }
 
 
-const upsertItem = () => {
-  const deadline = todoItem.value.deadline;
-  const upload = {...todoItem.value, deadline: deadline ? dayjs(deadline).valueOf() : null}
-  myAxios.post("/todo/upsert", upload).then(
-      (res) => {
-        data.value = res.data;
-        visible.value = false
-        todoItem.value = {}
-        loadData();
-      },
-      () => {
-      }
-  );
+const upsertItem = (formEl) => {
+  if (!formEl) return
+  formEl.validate((valid) => {
+    if (valid) {
+      console.log('success')
+      const deadline = todoItem.value.deadline;
+      const upload = {...todoItem.value, deadline: deadline ? dayjs(deadline).valueOf() : null}
+      myAxios.post("/todo/upsert", upload).then(
+          (res) => {
+            data.value = res.data;
+            visible.value = false
+            todoItem.value = {}
+            loadData();
+          },
+          () => {
+          }
+      );
+    } else {
+      return false
+    }
+  })
+
 }
 
 const completeItem = (id) => {
