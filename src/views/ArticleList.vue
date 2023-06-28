@@ -9,7 +9,7 @@
 
 <script setup>
 import {ref} from 'vue'
-import myAxios from '@/utils/httpRequest'
+import myAxios from '@/utils/http'
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 
 const data = ref([]);

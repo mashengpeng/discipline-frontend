@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from 'vue'
-import myAxios from '@/utils/httpRequest'
+import myAxios from '@/utils/http'
 
 const data = ref({
   tag: ''

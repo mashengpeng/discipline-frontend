@@ -15,7 +15,8 @@
             time-arrow-control
             v-model="todoItem.deadline"
             type="datetime"
-            placeholder="选择日期时间"
+            placeholder="选择截止日期"
+            :shortcuts="shortcuts"
         >
         </el-date-picker>
       </el-form-item>
@@ -33,7 +34,7 @@
       <el-tab-pane label="已完成" name="done"></el-tab-pane>
       <el-tab-pane label="已过期" name="expired"></el-tab-pane>
     </el-tabs>
-    <el-button @click="visible = true" :icon="Plus" size="large"></el-button>
+    <el-button @click="visible = true" :icon="Plus" size="large" type="primary" plain></el-button>
   </div>
 
 
@@ -47,11 +48,11 @@
         <div v-else/>
       </template>
     </el-table-column>
-    <el-table-column fixed="right" label="操作" width="250">
+    <el-table-column fixed="right" label="操作" width="240px" align="right">
       <template #default="scope">
-        <el-button @click="completeItem(scope.row.id)">完成</el-button>
-        <el-button @click="editItem(scope.row)">编辑</el-button>
-        <el-button @click="deleteItem(scope.row.id)">删除</el-button>
+        <el-button type="primary" plain @click="completeItem(scope.row.id)" v-show="activeTab === 'undone'">完成</el-button>
+        <el-button type="success" plain @click="editItem(scope.row)" v-show="activeTab === 'undone'">编辑</el-button>
+        <el-button type="danger" plain @click="deleteItem(scope.row.id)" >删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -59,29 +60,47 @@
 
 </template>
 <script setup>
-import myAxios from "@/utils/httpRequest";
-import {nextTick, reactive, ref, toRaw} from "vue";
+import myAxios from "@/utils/http";
+import {nextTick, reactive, ref, toRaw, watchEffect} from "vue";
 import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
 import {dayjs} from 'element-plus'
 import {Plus} from '@element-plus/icons-vue'
 
 const route = useRoute();
 const router = useRouter();
-const activeTab = ref("undone")
+const activeTab = ref(route.query.tab ? route.query.tab : "undone")
 
 const data = ref([]);
 const visible = ref(false);
 const todoItem = ref({})
 
+
+const shortcuts = [
+  {
+    text: '24小时后',
+    value: () => {
+      const date = new Date()
+      date.setTime(date.getTime() + 3600 * 1000 * 24)
+      return date
+    },
+  },
+  {
+    text: '7天后',
+    value: () => {
+      const date = new Date()
+      date.setTime(date.getTime() + 3600 * 1000 * 24 * 7)
+      return date
+    },
+  },
+]
+
 const tabChange = () => {
   nextTick(()=>{
-    loadData()
+    router.push({path: '/todo', query: {tab: activeTab.value}})
   })
-
 }
 
 const loadData = () => {
-  console.log(activeTab.value)
   myAxios.get(`/todo/${activeTab.value}`).then(
       (res) => {
         data.value = res.data
@@ -90,14 +109,11 @@ const loadData = () => {
       }
   );
 }
+watchEffect(()=>{
+  loadData()
+})
 
 
-// onBeforeRouteUpdate((to, from, next) => {
-//   loadData(to.params.status);
-//   next()
-// });
-
-loadData();
 
 const cancel = () => {
   visible.value = false;
@@ -108,10 +124,8 @@ const cancel = () => {
 const upsertItem = () => {
   const deadline = todoItem.value.deadline;
   const upload = {...todoItem.value, deadline: deadline ? dayjs(deadline).valueOf() : null}
-  console.log(upload)
   myAxios.post("/todo/upsert", upload).then(
       (res) => {
-        console.log(res)
         data.value = res.data;
         visible.value = false
         todoItem.value = {}
