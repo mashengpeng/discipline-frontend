@@ -1,17 +1,18 @@
 // 全局路由(无需嵌套上左右整体布局)
 import {createRouter, createWebHistory} from "vue-router";
+import http from "@/utils/http";
+import {ElNotification} from 'element-plus'
 
 const globalRoutes = [
-    {path: '/404', component: () => import('@/views/404.vue'), name: '404', meta: {title: '404未找到'}},
-    {path: '/login', component: () => import('@/views/Login.vue'), name: 'login', meta: {title: '登录'}}
+    {path: '/404', component: () => import('@/views/404.vue'), name: '404', meta: {title: '404未找到', anno: true}},
+    {path: '/login', component: () => import('@/views/Login.vue'), name: 'login', meta: {title: '登录', anno: true}}
 ]
 
 // 主入口路由(需嵌套上左右整体布局)
 const mainRoutes = {
     path: '/',
     component: () => import('@/views/Main.vue'),
-    name: 'main',
-    meta: {title: '主入口整体布局'},
+    // name: 'main',
     children: [
         {path: '/', component: () => import('@/views/Home.vue'), name: 'home', meta: {title: '首页'}},
         {path: '/todo', component: () => import('@/views/Todo.vue'), name: 'todo', meta: {title: '代办事项'}},
@@ -38,10 +39,36 @@ export const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.meta.title) {
-        document.title = to.meta.title;
+
+    document.title = to.meta.title ?? "vue";
+
+    if (to.meta.anno) {
+        next()
+        return
     }
-    next();
+    // ElNotification({
+    //     title: '检查登录',
+    //     type: 'info',
+    //     offset: 50,
+    // });
+    http.get("/user/isLogin").then(
+        (res) => {
+            if (!res.data) {
+                ElNotification({
+                    title: '未登录,请先登录',
+                    type: 'info',
+                    duration: 1000
+                });
+                localStorage.clear()
+                next({name: 'login'})
+            } else {
+                next()
+            }
+        },
+        () => {
+            next({name: 'login'})
+        }
+    );
 });
 
 
