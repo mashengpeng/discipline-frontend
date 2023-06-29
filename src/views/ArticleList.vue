@@ -1,10 +1,10 @@
 <template>
   <div class="overflow-hidden">
     <el-card class="box-card border-0 m-1 p-4" :body-style="{ padding: '0px' }" shadow="hover" v-for="article in data"
-             :key="article.id">
+             :key="article.id" @click="router.push(`/article/${article.id}`)">
       <div class="flex justify-between w-full">
         <div class="flex-auto w-0">
-          <header class="text-xl font-bold mb-4">{{ article.title }}</header>
+          <h1 class="text-xl font-bold mb-4">{{ article.title }}</h1>
 
           <span>{{ dayjs(article.updateTime).fromNow() }}</span>
           <el-divider direction="vertical"/>

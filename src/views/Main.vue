@@ -15,7 +15,18 @@
       </el-menu>
     </el-header>
     <el-main class="p-0 h-[calc(100vh-100px)]">
+      <!--      <el-affix class="absolute">-->
+
+      <!--      </el-affix>-->
+      <el-button size="large"
+                 class="flex-1 border-0 shadow fixed z-50 inset-x-[2rem] sm:inset-x-[6rem] md:inset-x-[10rem] lg:inset-x-[14rem] xl:inset-x-[18rem] 2xl:inset-x-[26rem] inset-y-20"
+                 @click="router.back()" circle>
+        <el-icon size="30">
+          <caret-left/>
+        </el-icon>
+      </el-button>
       <el-scrollbar>
+
         <div
             class="sm:ml-16 sm:mr-16 md:ml-32 md:mr-32 lg:ml-48 lg:mr-48  xl:ml-64 xl:mr-64 2xl:ml-96 2xl:mr-96 sm:pl-32 sm:pr-32 sm:pt-4 sm:pb-4 min-h-[calc(100vh-100px)] lg:shadow-2xl">
           <router-view></router-view>
@@ -37,6 +48,7 @@
 import {useRoute, useRouter} from "vue-router";
 import http from '@/utils/http'
 import {ElNotification} from 'element-plus'
+import {CaretLeft} from "@element-plus/icons-vue";
 
 const router = useRouter();
 const route = useRoute();
