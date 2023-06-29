@@ -7,34 +7,13 @@
     </el-icon>
   </el-button>
 
-
-  <el-dialog title="编辑文章" v-model="visible" draggable center>
-    <el-form :model="data" ref="formRef">
-      <el-form-item label="标题" class="ml-16 mr-16" prop="title">
-        <el-input v-model="data.title"></el-input>
-      </el-form-item>
-      <el-form-item label="内容" class="ml-16 mr-16" prop="content">
-        <el-input type="textarea" v-model="data.content" :rows="20"></el-input>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-    <span class="dialog-footer">
-      <el-button @click="upsertArticle">确 定</el-button>
-    </span>
-    </template>
-  </el-dialog>
-
+  <el-drawer title="编辑文章" v-model="visible" class="" size="100%" @opened="renderEditor" :withHeader="false"
+             custom-class="drawer" :close-on-click-modal="false">
+    <div id="editContainer" class="vditor vditor--fullscreen"></div>
+  </el-drawer>
 
   <div class="p-4">
-    <!--    <el-page-header @back="router.back()" :content="data.title" > </el-page-header>-->
-
-
-    <div>
-      <h1 class="text-3xl font-bold mb-4">{{ data.title }}</h1>
-      <el-text>{{ data.content }}</el-text>
-    </div>
-
-
+    <div id="preview"></div>
     <div class="flex justify-evenly mt-8">
       <el-button @click="" class="flex-1 border-0">上一篇</el-button>
       <el-button @click="" class="flex-1 border-0">赞</el-button>
@@ -42,27 +21,28 @@
       <el-button @click="" class="flex-1 border-0">下一篇</el-button>
     </div>
 
-
   </div>
 
 </template>
 <script setup>
 
-import {ref} from 'vue'
+import {ref, watchEffect} from 'vue'
 import myAxios from '@/utils/http'
 import {useRoute, useRouter} from "vue-router";
-import {CaretLeft, DocumentAdd, Edit} from "@element-plus/icons-vue";
+import {Edit} from "@element-plus/icons-vue";
 import http from '@/utils/http'
+import Vditor from "vditor";
+import "vditor/dist/index.css";
 
 const data = ref([]);
 const route = useRoute();
 const router = useRouter();
 const visible = ref(false);
+const vditor = ref(null);
 const upsertArticle = () => {
   http.post("/article/upsert", data.value).then(
       (res) => {
-        data.value = res.data;
-        visible.value = false
+        // visible.value = false
         loadData();
       },
       () => {
@@ -70,16 +50,63 @@ const upsertArticle = () => {
   );
 }
 
+const renderEditor = () => {
+  vditor.value = new Vditor("editContainer", {
+    cache: {
+      enable: true
+    },
+    counter: {
+      enable: true,
+      type: 'text'
+    },
+    typewriterMode: true,
+    value: data.value.content,
+    mode: "ir",
+    toolbarConfig: {
+      pin: true
+    },
+    fullscreen: {
+      index: 999
+    },
+    after: () => {
+      // vditor.value.vditor.toolbar.elements.fullscreen.firstElementChild.dispatchEvent(new Event("click"));
+    },
+    blur(value) {
+      data.value.content = value
+      upsertArticle()
+    }
+  })
+}
+
 const loadData = () => {
   myAxios.post(`/article/${route.params.id}`).then(
       (res) => {
-        console.log(res)
         data.value = res.data;
+        Vditor.preview(document.getElementById("preview"), data.value.content, {
+          anchor: 0,
+          hljs: {
+            enable: true,  // 代码高亮
+            style: 'github',
+            lineNumber: true
+          },
+          speech: {
+            enable: true
+          },
+          markdown: {toc: true},
+          theme: {
+            current: 'ant-design'
+          }
+        })
       },
       () => {
       }
   );
 }
+
+
+watchEffect(() => {
+
+})
 loadData();
 </script>
 
@@ -87,5 +114,9 @@ loadData();
 <style scoped>
 .no-transparent {
   background-color: var(--el-button-bg-color, var(--el-color-white))
+}
+
+:deep(.el-drawer__body) {
+  padding: 0
 }
 </style>

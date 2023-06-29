@@ -30,13 +30,16 @@
              :key="article.id" @click="router.push(`/article/${article.id}`)">
       <div class="flex justify-between w-full">
         <div class="flex-auto w-0">
-          <h1 class="text-xl font-bold mb-4">{{ article.title }}</h1>
-
-          <span>{{ dayjs(article.updateTime).fromNow() }}</span>
+          <div class="text-xl font-bold mb-4">{{ article.title }}</div>
+          <span>{{ dayjs(article.createTime).format('YYYY-MM-DD HH:mm') }}</span>
           <el-divider direction="vertical"/>
-          <el-space>
-            <el-tag v-for="(e, index) in article.tag.split(',')">{{ e }}</el-tag>
-          </el-space>
+          <span>更新于:{{ dayjs(article.updateTime).fromNow() }}</span>
+          <span v-if="article.tag">
+            <el-divider direction="vertical"/>
+            <el-space>
+              <el-tag v-for="(e, index) in article.tag.split(',')">{{ e }}</el-tag>
+            </el-space>
+          </span>
           <div class="mt-4 w-full">
             <el-text truncated>{{ article.content }}</el-text>
           </div>
