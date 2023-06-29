@@ -15,20 +15,16 @@
       </el-menu>
     </el-header>
     <el-main class="p-0 h-[calc(100vh-100px)]">
-      <!--      <el-affix class="absolute">-->
-
-      <!--      </el-affix>-->
-      <el-button size="large"
-                 class="flex-1 border-0 shadow fixed z-50 inset-x-[2rem] sm:inset-x-[6rem] md:inset-x-[10rem] lg:inset-x-[14rem] xl:inset-x-[18rem] 2xl:inset-x-[26rem] inset-y-20"
-                 @click="router.back()" circle>
-        <el-icon size="30">
-          <caret-left/>
-        </el-icon>
-      </el-button>
       <el-scrollbar>
-
         <div
             class="sm:ml-16 sm:mr-16 md:ml-32 md:mr-32 lg:ml-48 lg:mr-48  xl:ml-64 xl:mr-64 2xl:ml-96 2xl:mr-96 sm:pl-32 sm:pr-32 sm:pt-4 sm:pb-4 min-h-[calc(100vh-100px)] lg:shadow-2xl">
+          <el-button size="large"
+                     class="flex-1 border-0 shadow fixed z-50 left-[4px] sm:left-[6rem] md:left-[10rem] lg:left-[14rem] xl:left-[18rem] 2xl:left-[26rem] bottom-16 sm:top-16"
+                     @click="router.back()" circle>
+            <el-icon size="30">
+              <caret-left/>
+            </el-icon>
+          </el-button>
           <router-view></router-view>
         </div>
         <el-backtop :right="40" :bottom="80" target=".el-scrollbar__wrap"/>
@@ -69,4 +65,7 @@ const logout = () => {
 
 </script>
 <style scoped>
+.el-button {
+  background-color: var(--el-button-bg-color, var(--el-color-white))
+}
 </style>
