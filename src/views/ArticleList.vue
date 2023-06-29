@@ -14,12 +14,12 @@
         <el-input v-model="article.title"></el-input>
       </el-form-item>
       <el-form-item label="内容" class="ml-16 mr-16" prop="content">
-        <el-input type="textarea" v-model="article.content" :rows="30"></el-input>
+        <el-input type="textarea" v-model="article.content" :rows="20"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
     <span class="dialog-footer">
-      <el-button @click="addArticle">确 定</el-button>
+      <el-button @click="upsertArticle">确 定</el-button>
     </span>
     </template>
   </el-dialog>
@@ -73,8 +73,8 @@ const visible = ref(false);
 const data = ref([]);
 const article = ref({});
 
-const addArticle = () => {
-  http.post("/article/add", article.value).then(
+const upsertArticle = () => {
+  http.post("/article/upsert", article.value).then(
       (res) => {
         data.value = res.data;
         visible.value = false
