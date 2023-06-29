@@ -1,19 +1,23 @@
 <template>
-  <div>
-    <el-card class="box-card border-0 m-1" shadow="hover" v-for="article in data" :key="article.id">
+  <div class="overflow-hidden">
+    <el-card class="box-card border-0 m-1 p-4" :body-style="{ padding: '0px' }" shadow="hover" v-for="article in data"
+             :key="article.id">
       <div class="flex justify-between w-full">
-        <div>
-          <header class="text-xl font-bold">{{ article.title }}</header>
-          <el-space spacer="|">
-            <span>{{ dayjs(article.updateTime).fromNow() }}</span>
-            <span>{{ article.tag }}</span>
+        <div class="flex-auto w-0">
+          <header class="text-xl font-bold mb-4">{{ article.title }}</header>
+
+          <span>{{ dayjs(article.updateTime).fromNow() }}</span>
+          <el-divider direction="vertical"/>
+          <el-space>
+            <el-tag v-for="(e, index) in article.tag.split(',')">{{ e }}</el-tag>
           </el-space>
-          <div class="w-[800px] mt-4">
+          <div class="mt-4 w-full">
             <el-text truncated>{{ article.content }}</el-text>
           </div>
         </div>
-        <div class="">
-          <el-image class="w-[150px] h-[150px]"  src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+        <div class="flex-none w-[150px] h-[150px] ml-4">
+          <el-image fit="contain" class="w-full h-full"
+                    src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
         </div>
       </div>
 
@@ -29,10 +33,12 @@
 import {ref} from 'vue'
 import myAxios from '@/utils/http'
 import {useRouter} from "vue-router";
-import dayjs from "dayjs";
+import {dayjs} from "element-plus";
 import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/zh-cn'
 
 dayjs.extend(relativeTime)
+dayjs.locale('zh-cn')
 
 const data = ref([]);
 const loadData = () => {
