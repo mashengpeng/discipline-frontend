@@ -16,7 +16,7 @@ instance.interceptors.request.use(
             config.headers[key] = value;
         }
         // 在发送请求之前打印请求参数
-        console.log(`${config.method.toUpperCase()} ${config.baseURL}${config.url} ${config.params ?? ''} ${JSON.stringify(config.data) ?? ''}`);
+        console.log(`${config.method.toUpperCase()} ${config.baseURL}${config.url} ${config.params ?? ''} ${config.data ?? ''}`);
         return config;
     },
     error => {

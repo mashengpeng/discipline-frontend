@@ -7,8 +7,7 @@
     </el-icon>
   </el-button>
 
-  <el-drawer title="编辑文章" v-model="visible" class="" size="100%" @opened="renderEditor" :withHeader="false"
-             custom-class="drawer" :close-on-click-modal="false">
+  <el-drawer title="编辑文章" v-model="visible" class="" size="100%" @opened="renderEditor" :withHeader="false">
     <div id="editContainer" class="vditor vditor--fullscreen"></div>
   </el-drawer>
 
@@ -53,7 +52,7 @@ const upsertArticle = () => {
 const renderEditor = () => {
   vditor.value = new Vditor("editContainer", {
     cache: {
-      enable: true
+      enable: false
     },
     counter: {
       enable: true,

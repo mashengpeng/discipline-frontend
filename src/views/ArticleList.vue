@@ -8,21 +8,25 @@
   </el-button>
 
 
-  <el-dialog title="新文章" v-model="visible" draggable>
-    <el-form :model="article" ref="formRef">
-      <el-form-item label="标题" class="ml-16 mr-16" prop="title">
-        <el-input v-model="article.title"></el-input>
-      </el-form-item>
-      <el-form-item label="内容" class="ml-16 mr-16" prop="content">
-        <el-input type="textarea" v-model="article.content" :rows="20"></el-input>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-    <span class="dialog-footer">
-      <el-button @click="upsertArticle">确 定</el-button>
-    </span>
-    </template>
-  </el-dialog>
+  <!--  <el-dialog title="新文章" v-model="visible" draggable>-->
+  <!--    <el-form :model="article" ref="formRef">-->
+  <!--      <el-form-item label="标题" class="ml-16 mr-16" prop="title">-->
+  <!--        <el-input v-model="article.title"></el-input>-->
+  <!--      </el-form-item>-->
+  <!--      <el-form-item label="内容" class="ml-16 mr-16" prop="content">-->
+  <!--        <el-input type="textarea" v-model="article.content" :rows="20"></el-input>-->
+  <!--      </el-form-item>-->
+  <!--    </el-form>-->
+  <!--    <template #footer>-->
+  <!--    <span class="dialog-footer">-->
+  <!--      <el-button @click="upsertArticle">确 定</el-button>-->
+  <!--    </span>-->
+  <!--    </template>-->
+  <!--  </el-dialog>-->
+
+  <el-drawer title="编辑文章" v-model="visible" class="" size="100%" @opened="renderEditor" :withHeader="false">
+    <div id="editContainer" class="vditor vditor--fullscreen"></div>
+  </el-drawer>
 
 
   <div class="overflow-hidden">
@@ -67,6 +71,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn'
 import {DocumentAdd} from "@element-plus/icons-vue";
 import http from "@/utils/http";
+import Vditor from "vditor";
 
 dayjs.extend(relativeTime)
 dayjs.locale('zh-cn')
@@ -74,14 +79,46 @@ dayjs.locale('zh-cn')
 const visible = ref(false);
 
 const data = ref([]);
-const article = ref({});
+const newArticle = ref({content: " "});
+const vditor = ref(null);
+
+
+const renderEditor = () => {
+  vditor.value = new Vditor("editContainer", {
+    cache: {
+      enable: false
+    },
+    counter: {
+      enable: true,
+      type: 'text'
+    },
+    typewriterMode: true,
+    mode: "wysiwyg",
+    toolbarConfig: {
+      pin: true
+    },
+    value: newArticle.value.content,
+    fullscreen: {
+      index: 999
+    },
+    after: () => {
+      // vditor.value.vditor.toolbar.elements.fullscreen.firstElementChild.dispatchEvent(new Event("click"));
+      vditor.value.setValue("")
+    },
+    esc(value) {
+
+      newArticle.value.content = value
+      upsertArticle()
+
+    }
+  })
+}
+
 
 const upsertArticle = () => {
-  http.post("/article/upsert", article.value).then(
+  http.post("/article/upsert", newArticle.value).then(
       (res) => {
-        data.value = res.data;
-        visible.value = false
-        article.value = {}
+        newArticle.value = {content: " "}
         loadData();
       },
       () => {
