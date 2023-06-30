@@ -25,7 +25,8 @@
   <!--  </el-dialog>-->
 
   <el-drawer title="编辑文章" v-model="visible" class="" size="100%" @opened="renderEditor" :withHeader="false">
-    <div id="editContainer" class="vditor vditor--fullscreen"></div>
+    <div id="editContainer"></div>
+    <!--    class="vditor vditor&#45;&#45;fullscreen"-->
   </el-drawer>
 
 
@@ -72,6 +73,9 @@ import 'dayjs/locale/zh-cn'
 import {DocumentAdd} from "@element-plus/icons-vue";
 import http from "@/utils/http";
 import Vditor from "vditor";
+import Cherry from 'cherry-markdown';
+import 'cherry-markdown/dist/cherry-markdown.min.css'
+
 
 dayjs.extend(relativeTime)
 dayjs.locale('zh-cn')
@@ -84,34 +88,39 @@ const vditor = ref(null);
 
 
 const renderEditor = () => {
-  vditor.value = new Vditor("editContainer", {
-    cache: {
-      enable: false
-    },
-    counter: {
-      enable: true,
-      type: 'text'
-    },
-    typewriterMode: true,
-    mode: "wysiwyg",
-    toolbarConfig: {
-      pin: true
-    },
-    value: newArticle.value.content,
-    fullscreen: {
-      index: 999
-    },
-    after: () => {
-      // vditor.value.vditor.toolbar.elements.fullscreen.firstElementChild.dispatchEvent(new Event("click"));
-      vditor.value.setValue("")
-    },
-    esc(value) {
+  const cherryInstance = new Cherry({
+    id: 'editContainer',
+    value: '# welcome to cherry editor!',
+  });
 
-      newArticle.value.content = value
-      upsertArticle()
-
-    }
-  })
+  // vditor.value = new Vditor("editContainer", {
+  //   cache: {
+  //     enable: false
+  //   },
+  //   counter: {
+  //     enable: true,
+  //     type: 'text'
+  //   },
+  //   typewriterMode: true,
+  //   mode: "wysiwyg",
+  //   toolbarConfig: {
+  //     pin: true
+  //   },
+  //   value: newArticle.value.content,
+  //   fullscreen: {
+  //     index: 999
+  //   },
+  //   after: () => {
+  //     // vditor.value.vditor.toolbar.elements.fullscreen.firstElementChild.dispatchEvent(new Event("click"));
+  //     vditor.value.setValue("")
+  //   },
+  //   esc(value) {
+  //
+  //     newArticle.value.content = value
+  //     upsertArticle()
+  //
+  //   }
+  // })
 }
 
 
