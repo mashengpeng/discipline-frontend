@@ -1,8 +1,9 @@
 <template>
   <el-dialog v-model='visible' draggable title='添加代办' @close='cancel'>
-    <el-form ref='formRef' :model='todoItem' :rules='rules'>
+    <el-form :model='todoItem'>
       <el-form-item class='ml-16 mr-16' label='事项' prop='title'>
-        <el-input v-model='todoItem.title' :minlength='0' clearable></el-input>
+        <el-autocomplete v-model='todoItem.title' :fetch-suggestions='querySearch' class='w-[600px]'
+                         clearable></el-autocomplete>
       </el-form-item>
       <el-form-item class='ml-16 mr-16' label='描述' prop='description'>
         <el-input v-model='todoItem.description' clearable></el-input>
@@ -23,7 +24,7 @@
     </el-form>
     <template #footer>
     <span class='dialog-footer'>
-      <el-button @click='upsertItem(formRef)'>确 定</el-button>
+      <el-button @click='upsertItem'>确 定</el-button>
     </span>
     </template>
   </el-dialog>
@@ -37,7 +38,7 @@
   </el-button>
 
 
-  <el-tabs v-model='activeTab' class='flex flex-1' tabPosition='bottom' @tab-click='tabChange'>
+  <el-tabs v-model='activeTab' class='' tabPosition='bottom' @tab-click='tabChange'>
     <el-tab-pane label='待完成' name='undone'></el-tab-pane>
     <el-tab-pane label='已完成' name='done'></el-tab-pane>
     <el-tab-pane label='已过期' name='expired'></el-tab-pane>
@@ -77,7 +78,7 @@
 </template>
 <script setup>
 import http from '@/utils/http';
-import { nextTick, reactive, ref, toRaw, watchEffect } from 'vue';
+import { nextTick, ref, toRaw, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { dayjs } from 'element-plus';
 import { DeleteFilled, DocumentAdd, Finished } from '@element-plus/icons-vue';
@@ -94,11 +95,17 @@ const todoItem = ref({});
 
 const formRef = ref();
 
-const rules = reactive({
-  title: [
-    { required: true, message: '请输入代办事项', trigger: 'blur' },
-  ],
-});
+const querySearch = (queryString, callback) => {
+  http.get('/todo/prompt', { params: { keyword: queryString } }).then(
+    (res) => {
+
+      callback(res.data);
+    },
+    () => {
+    },
+  );
+};
+
 
 const shortcuts = [
   {
@@ -153,27 +160,19 @@ const cancel = () => {
 };
 
 
-const upsertItem = (formEl) => {
-  if (!formEl) return;
-  formEl.validate((valid) => {
-    if (valid) {
-      const deadline = todoItem.value.deadline;
-      const upload = { ...todoItem.value, deadline: deadline ? dayjs(deadline).valueOf() : null };
-      http.post('/todo/upsert', upload).then(
-        (res) => {
-          data.value = res.data;
-          visible.value = false;
-          todoItem.value = {};
-          loadData();
-        },
-        () => {
-        },
-      );
-    } else {
-      return false;
-    }
-  });
-
+const upsertItem = () => {
+  const deadline = todoItem.value.deadline;
+  const upload = { ...todoItem.value, deadline: deadline ? dayjs(deadline).valueOf() : null };
+  http.post('/todo/upsert', upload).then(
+    (res) => {
+      data.value = res.data;
+      visible.value = false;
+      todoItem.value = {};
+      loadData();
+    },
+    () => {
+    },
+  );
 };
 
 const completeItem = (id) => {
