@@ -7,14 +7,15 @@
     </el-icon>
   </el-button>
 
-  <el-drawer title="编辑文章" v-model="visible" class="" size="100%" @opened="renderEditor" :withHeader="false">
-    <div id="editContainer" class="vditor vditor--fullscreen"></div>
+  <el-drawer title="编辑文章" v-model="visible" class="" size="100%" @opened="renderEditor" :withHeader="false"
+             :destroy-on-close="true" @close="upsertArticle">
+    <div id="editContainer"></div>
   </el-drawer>
 
   <div class="p-4">
-    <div id="preview"></div>
+    <div id="previewContainer"></div>
     <div class="flex justify-evenly mt-8">
-      <el-button @click="" class="flex-1 border-0">上一篇</el-button>
+      <el-button @click="previewCherry.setValue('asdfsdf') " class="flex-1 border-0">上一篇</el-button>
       <el-button @click="" class="flex-1 border-0">赞</el-button>
       <el-button @click="" class="flex-1 border-0">评论</el-button>
       <el-button @click="" class="flex-1 border-0">下一篇</el-button>
@@ -25,97 +26,83 @@
 </template>
 <script setup>
 
-import {ref, watchEffect} from 'vue'
-import myAxios from '@/utils/http'
+import {onBeforeMount, onMounted, onBeforeUpdate, onUpdated, onBeforeUnmount, onUnmounted, ref, watchEffect} from 'vue'
 import {useRoute, useRouter} from "vue-router";
 import {Edit} from "@element-plus/icons-vue";
 import http from '@/utils/http'
-import Vditor from "vditor";
-import "vditor/dist/index.css";
+import Cherry from 'cherry-markdown'
+import 'cherry-markdown/dist/cherry-markdown.min.css'
 
-const data = ref([]);
+
+const data = ref({content: ""});
 const route = useRoute();
 const router = useRouter();
 const visible = ref(false);
-const vditor = ref(null);
+const previewCherry = ref(null)
+const editCherry = ref(null)
+
 const upsertArticle = () => {
+  data.value.content = editCherry.value.getValue()
   http.post("/article/upsert", data.value).then(
       (res) => {
-        // visible.value = false
         loadData();
       },
       () => {
       }
   );
 }
+const loadData = async () => {
 
-const renderEditor = () => {
-  vditor.value = new Vditor("editContainer", {
-    cache: {
-      enable: false
-    },
-    counter: {
-      enable: true,
-      type: 'text'
-    },
-    typewriterMode: true,
-    value: data.value.content,
-    mode: "ir",
-    toolbarConfig: {
-      pin: true
-    },
-    fullscreen: {
-      index: 999
-    },
-    after: () => {
-      // vditor.value.vditor.toolbar.elements.fullscreen.firstElementChild.dispatchEvent(new Event("click"));
-    },
-    blur(value) {
-      data.value.content = value
-      upsertArticle()
-    }
-  })
-}
-
-const loadData = () => {
-  myAxios.post(`/article/${route.params.id}`).then(
+  await http.post(`/article/${route.params.id}`).then(
       (res) => {
         data.value = res.data;
-        Vditor.preview(document.getElementById("preview"), data.value.content, {
-          anchor: 0,
-          hljs: {
-            enable: true,  // 代码高亮
-            style: 'github',
-            lineNumber: true
-          },
-          speech: {
-            enable: true
-          },
-          markdown: {toc: true},
-          theme: {
-            current: 'ant-design'
-          }
-        })
+        previewCherry.value.setValue(data.value.content);
       },
       () => {
       }
   );
 }
+console.log("initial cherry")
+
+
+onMounted(() => {
+  previewCherry.value = new Cherry({
+    id: 'previewContainer',
+    value: "",
+    toolbars: {
+      toolbar: false,
+    },
+    editor: {
+      defaultModel: 'previewOnly',
+    },
+    isPreviewOnly: true,
+    forceAppend: false,
+  });
+  loadData();
+})
+
+const renderEditor = () => {
+  editCherry.value = new Cherry({
+    id: 'editContainer',
+    value: data.value.content
+  });
+}
 
 
 watchEffect(() => {
-
 })
-loadData();
+
 </script>
 
 
-<style scoped>
-.no-transparent {
-  background-color: var(--el-button-bg-color, var(--el-color-white))
+<style>
+.cherry-previewer {
+  border-left: none;
+  background-color: white;
 }
 
-:deep(.el-drawer__body) {
-  padding: 0
+.cherry {
+  box-shadow: none;
+  background-color: white;
 }
 </style>

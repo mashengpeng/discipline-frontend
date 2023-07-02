@@ -14,8 +14,8 @@
     "dayjs": "^1.11.8",
     "echarts": "^4.6.0",
     "element-plus": "^2.3.7",
+    "marked": "^5.1.0",
     "mermaid": "^8.11.1",
-    "vditor": "^3.9.4",
     "vue": "^3.3.2",
     "vue-router": "^4.2.2"
   },
