@@ -7,7 +7,7 @@
                mode='horizontal'
                router
       >
-        <el-menu-item class='flex-1' index='/'>首页</el-menu-item>
+        <el-menu-item class='flex-1' index='/index'>首页</el-menu-item>
         <el-menu-item class='flex-1' index='/todo'>代办事项</el-menu-item>
         <el-menu-item class='flex-1' index='/article'>文章</el-menu-item>
         <el-menu-item class='flex-1' index='/question'>题目</el-menu-item>

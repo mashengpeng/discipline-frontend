@@ -16,13 +16,15 @@ const globalRoutes = [
 // 主入口路由(需嵌套上左右整体布局)
 const mainRoutes = {
   path: '/',
+  redirect: '/index',
   component: () => import('@/views/Main.vue'),
   // name: 'main',
   children: [
-    { path: '/', component: () => import('@/views/Home.vue'), name: 'home', meta: { title: '首页' } },
+    { path: '/index', component: () => import('@/views/Home.vue'), name: 'home', meta: { title: '首页' } },
     { path: '/todo', component: () => import('@/views/Todo.vue'), name: 'todo', meta: { title: '代办事项' } },
+    { path: '/article', redirect: '/article/list' },
     {
-      path: '/article',
+      path: '/article/list',
       component: () => import('@/views/ArticleList.vue'),
       name: 'articleList',
       meta: { title: '文章' },

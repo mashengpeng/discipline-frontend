@@ -19,7 +19,7 @@
       <div class='flex justify-between w-full'>
         <div class='flex-auto w-0'>
           <div class='text-xl font-bold mb-4'>{{ article.title }}</div>
-          <div>
+          <div class='text-gray-400 text-sm'>
             {{ dayjs(article.createTime).format('YYYY-MM-DD HH:mm') }}
             <el-divider direction='vertical' />
             更新于:{{ dayjs(article.updateTime).fromNow() }}
