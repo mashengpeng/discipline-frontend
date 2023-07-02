@@ -15,8 +15,9 @@
     </el-icon>
   </el-button>
 
-  <el-drawer v-model='visible' :destroy-on-close='true' :withHeader='false' class='' size='100%' title='编辑文章'
-             @close='upsertArticle' @opened='renderEditor'>
+  <el-drawer v-model='visible' :before-close='confirmEdit' :destroy-on-close='true' :withHeader='false' class=''
+             size='100%'
+             title='编辑文章' @opened='renderEditor'>
     <div id='editContainer'></div>
   </el-drawer>
 
@@ -41,7 +42,7 @@ import http from '@/utils/http';
 import Cherry from 'cherry-markdown';
 import 'cherry-markdown/dist/cherry-markdown.min.css';
 import { ElMessageBox, ElNotification } from 'element-plus';
-
+import { Md5 } from 'ts-md5';
 
 const data = ref({ content: '' });
 const route = useRoute();
@@ -50,11 +51,37 @@ const visible = ref(false);
 const previewCherry = ref(null);
 const editCherry = ref(null);
 
+
+const confirmEdit = (exit) => {
+  console.log(Md5.hashStr(editCherry.value.getValue()), data.value.md5);
+  if (Md5.hashStr(editCherry.value.getValue()) === data.value.md5) {
+    exit();
+    return;
+  }
+  ElMessageBox.confirm('是否保存修改?', '提示', {
+    confirmButtonText: '保存',
+    cancelButtonText: '放弃',
+    type: 'warning',
+  })
+    .then(() => {
+      upsertArticle();
+      exit();
+    })
+    .catch(() => {
+      exit();
+    });
+};
+
 const upsertArticle = () => {
   data.value.content = editCherry.value.getValue();
   http.post('/article/upsert', data.value).then(
     (res) => {
       loadData();
+      ElNotification({
+        title: '已修改',
+        message: '文章修改成功',
+        type: 'success',
+      });
     },
     () => {
     },

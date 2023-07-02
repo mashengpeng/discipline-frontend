@@ -82,9 +82,6 @@ const data = ref([]);
 const visible = ref(false);
 const todoItem = ref({});
 
-
-const formRef = ref();
-
 const querySearch = (queryString, callback) => {
   http.get('/todo/prompt', { params: { keyword: queryString } }).then(
     (res) => {
@@ -139,6 +136,7 @@ const loadData = () => {
     },
   );
 };
+
 watchEffect(() => {
   loadData();
 });

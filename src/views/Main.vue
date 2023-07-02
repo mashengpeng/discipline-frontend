@@ -34,9 +34,9 @@
               <refresh />
             </el-icon>
           </el-button>
-          <router-view></router-view>
-
-
+          <keep-alive>
+            <router-view></router-view>
+          </keep-alive>
         </div>
         <el-backtop :bottom='80' :right='40' target='.el-scrollbar__wrap' />
       </el-scrollbar>
