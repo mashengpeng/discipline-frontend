@@ -40,6 +40,7 @@ import { Delete, Edit } from '@element-plus/icons-vue';
 import http from '@/utils/http';
 import Cherry from 'cherry-markdown';
 import 'cherry-markdown/dist/cherry-markdown.min.css';
+import { ElMessageBox, ElNotification } from 'element-plus';
 
 
 const data = ref({ content: '' });
@@ -61,13 +62,31 @@ const upsertArticle = () => {
 };
 
 const deleteArticle = () => {
-  http.post('/article/delete', data.value).then(
-    (res) => {
-      router.push('/article/list');
-    },
-    () => {
-    },
-  );
+  ElMessageBox.confirm('确认删除文章?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'error',
+  })
+    .then(() => {
+      http.post('/article/delete', data.value).then(
+        (res) => {
+          ElNotification({
+            type: 'success',
+            message: '删除成功!',
+          });
+          router.push('/article/list');
+        },
+        () => {
+        },
+      );
+    })
+    .catch(() => {
+      ElNotification({
+        type: 'info',
+        message: '取消删除',
+      });
+    });
+
 };
 
 const loadData = async () => {
