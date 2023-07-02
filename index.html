@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<link rel="icon" href="/favicon.ico">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Vite App</title>
-</head>
-<body>
-<div id="app"></div>
-<script type="module" src="/src/main.js"></script>
-<!--<script type="application/javascript">-->
-<!--    function getIP(json) {-->
-<!--        sessionStorage.setItem("ip", json.ip)-->
-<!--        console.log("My public IP address is: ", json.ip);-->
-<!--    }-->
-<!--</script>-->
-
-<!--<script type="application/javascript" src="https://api.ipify.org?format=jsonp&callback=getIP"></script>-->
-</body>
+<html lang='en'>
+	<head>
+		<meta charset='UTF-8'>
+		<link href='/favicon.ico' rel='icon'>
+		<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+		<title>Vite App</title>
+	</head>
+	<body>
+		<div id='app'></div>
+		<script src='/src/main.js' type='module'></script>
+		<script type='application/javascript'>
+      function getIP(json) {
+        sessionStorage.setItem('ip', json.ip);
+        console.log('My public IP address is: ', json.ip);
+      }
+		</script>
+		<script async src='https://api.ipify.org?format=jsonp&callback=getIP' type='application/javascript'></script>
+	</body>
 </html>
