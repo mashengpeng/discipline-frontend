@@ -11,6 +11,7 @@
         <el-menu-item class='flex-1' index='/todo'>代办事项</el-menu-item>
         <el-menu-item class='flex-1' index='/article'>文章</el-menu-item>
         <el-menu-item class='flex-1' index='/question'>题目</el-menu-item>
+        <el-menu-item class='flex-1' index='/tools'>工具箱</el-menu-item>
         <el-menu-item class='flex-1' index='/login' @click='logout'>注销</el-menu-item>
       </el-menu>
     </el-header>
@@ -19,20 +20,23 @@
         <div
           class='sm:ml-16 sm:mr-16 md:ml-32 md:mr-32 lg:ml-48 lg:mr-48  xl:ml-64 xl:mr-64 2xl:ml-96 2xl:mr-96 sm:pl-32 sm:pr-32 sm:pt-4 sm:pb-4 min-h-[calc(100vh-100px)] lg:shadow-2xl'>
           <el-button circle
-                     class='flex-1 border-0 shadow fixed z-50 left-[4px] sm:left-[6rem] md:left-[10rem] lg:left-[14rem] xl:left-[18rem] 2xl:left-[26rem] bottom-16 sm:top-16'
+                     class='no-transparent flex-1 border-0 shadow fixed z-50 left-[4px] sm:left-[6rem] md:left-[10rem] lg:left-[14rem] xl:left-[18rem] 2xl:left-[26rem] bottom-16 sm:top-16'
                      size='large' @click='router.back()'>
             <el-icon size='30'>
               <caret-left />
             </el-icon>
           </el-button>
-          <router-view></router-view>
+          <div></div>
           <el-button circle
-                     class='flex-1 border-0 shadow fixed z-50 left-[4px] sm:left-[6rem] md:left-[10rem] lg:left-[14rem] xl:left-[18rem] 2xl:left-[26rem] bottom-32 sm:top-32'
+                     class='no-transparent flex-1 border-0 shadow fixed z-50 left-[4px] sm:left-[6rem] md:left-[10rem] lg:left-[14rem] xl:left-[18rem] 2xl:left-[26rem] bottom-32 sm:top-32'
                      size='large' @click='router.go(0)'>
             <el-icon size='30'>
               <refresh />
             </el-icon>
           </el-button>
+          <router-view></router-view>
+
+
         </div>
         <el-backtop :bottom='80' :right='40' target='.el-scrollbar__wrap' />
       </el-scrollbar>

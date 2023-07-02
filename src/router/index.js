@@ -42,6 +42,12 @@ const mainRoutes = [{
       name: 'question',
       meta: { title: '题目' },
     },
+    {
+      path: '/tools',
+      component: () => import('@/views/Tools.vue'),
+      name: 'tools',
+      meta: { title: '工具箱' },
+    },
   ],
 }];
 
