@@ -37,13 +37,11 @@
     </el-icon>
   </el-button>
 
-
-  <el-tabs v-model='activeTab' class='' tabPosition='bottom' @tab-click='tabChange'>
+  <el-tabs v-model='activeTab' stretch tabPosition='bottom' type='card' @tab-click='tabChange'>
     <el-tab-pane label='待完成' name='undone'></el-tab-pane>
     <el-tab-pane label='已完成' name='done'></el-tab-pane>
     <el-tab-pane label='已过期' name='expired'></el-tab-pane>
   </el-tabs>
-
 
   <el-table :data='data'>
     <el-table-column label='事项' prop='title' />
@@ -61,8 +59,10 @@
                    type='primary'
                    @click='completeItem(scope.row.id)'>
           <el-icon size='30'>
-            <finished />
+            <check />
           </el-icon>
+
+
         </el-button>
         <EditButton v-show="activeTab === 'undone'" @click='editItem(scope.row)'></EditButton>
         <el-button class='border-0' plain round type='danger' @click='deleteItem(scope.row.id)'>
@@ -81,7 +81,7 @@ import http from '@/utils/http';
 import { nextTick, ref, toRaw, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { dayjs } from 'element-plus';
-import { DeleteFilled, DocumentAdd, Finished } from '@element-plus/icons-vue';
+import { Check, DeleteFilled, DocumentAdd } from '@element-plus/icons-vue';
 import EditButton from '@/components/EditButton.vue';
 
 const route = useRoute();

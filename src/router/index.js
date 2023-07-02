@@ -21,7 +21,7 @@ const mainRoutes = [{
   component: () => import('@/views/Main.vue'),
   // name: 'main',
   children: [
-    { path: '/index', component: () => import('@/views/Home.vue'), name: 'home', meta: { title: '首页' } },
+    { path: '/index', component: () => import('@/views/Index.vue'), name: 'index', meta: { title: '首页' } },
     { path: '/todo', component: () => import('@/views/Todo.vue'), name: 'todo', meta: { title: '代办事项' } },
     { path: '/article', redirect: '/article/list' },
     {

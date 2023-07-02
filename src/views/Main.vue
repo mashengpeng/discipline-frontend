@@ -26,6 +26,13 @@
             </el-icon>
           </el-button>
           <router-view></router-view>
+          <el-button circle
+                     class='flex-1 border-0 shadow fixed z-50 left-[4px] sm:left-[6rem] md:left-[10rem] lg:left-[14rem] xl:left-[18rem] 2xl:left-[26rem] bottom-32 sm:top-32'
+                     size='large' @click='router.go(0)'>
+            <el-icon size='30'>
+              <refresh />
+            </el-icon>
+          </el-button>
         </div>
         <el-backtop :bottom='80' :right='40' target='.el-scrollbar__wrap' />
       </el-scrollbar>
@@ -44,7 +51,7 @@
 import { useRoute, useRouter } from 'vue-router';
 import http from '@/utils/http';
 import { ElNotification } from 'element-plus';
-import { CaretLeft } from '@element-plus/icons-vue';
+import { CaretLeft, Refresh } from '@element-plus/icons-vue';
 
 const router = useRouter();
 const route = useRoute();
