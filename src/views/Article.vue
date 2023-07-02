@@ -7,6 +7,14 @@
     </el-icon>
   </el-button>
 
+  <el-button circle
+             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] sm:right-[6rem] md:right-[10rem] lg:right-[14rem] xl:right-[18rem] 2xl:right-[26rem] bottom-32 sm:top-32'
+             size='large' @click='deleteArticle'>
+    <el-icon size='30'>
+      <delete />
+    </el-icon>
+  </el-button>
+
   <el-drawer v-model='visible' :destroy-on-close='true' :withHeader='false' class='' size='100%' title='编辑文章'
              @close='upsertArticle' @opened='renderEditor'>
     <div id='editContainer'></div>
@@ -28,7 +36,7 @@
 
 import { onMounted, ref, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Edit } from '@element-plus/icons-vue';
+import { Delete, Edit } from '@element-plus/icons-vue';
 import http from '@/utils/http';
 import Cherry from 'cherry-markdown';
 import 'cherry-markdown/dist/cherry-markdown.min.css';
@@ -51,6 +59,17 @@ const upsertArticle = () => {
     },
   );
 };
+
+const deleteArticle = () => {
+  http.post('/article/delete', data.value).then(
+    (res) => {
+      router.push('/article/list');
+    },
+    () => {
+    },
+  );
+};
+
 const loadData = async () => {
   await http.post(`/article/${route.params.id}`).then(
     (res) => {
