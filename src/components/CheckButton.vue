@@ -1,12 +1,12 @@
 <script setup>
 
-import { Edit } from '@element-plus/icons-vue';
+import { Check } from '@element-plus/icons-vue';
 </script>
 
 <template>
-  <el-button class='border-0' plain round type='success'>
+  <el-button class='border-0' plain round type='primary'>
     <el-icon size='30'>
-      <edit />
+      <check />
     </el-icon>
   </el-button>
 </template>

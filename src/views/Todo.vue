@@ -55,21 +55,9 @@
     </el-table-column>
     <el-table-column align='right' fixed='right' label='' width='240px'>
       <template #default='scope'>
-        <el-button v-show="activeTab === 'undone'" class='border-0' plain round
-                   type='primary'
-                   @click='completeItem(scope.row.id)'>
-          <el-icon size='30'>
-            <check />
-          </el-icon>
-
-
-        </el-button>
-        <EditButton v-show="activeTab === 'undone'" @click='editItem(scope.row)'></EditButton>
-        <el-button class='border-0' plain round type='danger' @click='deleteItem(scope.row.id)'>
-          <el-icon size='30'>
-            <delete-filled />
-          </el-icon>
-        </el-button>
+        <CheckButton v-show="activeTab === 'undone'" @click='completeItem(scope.row.id)' />
+        <EditButton v-show="activeTab === 'undone'" @click='editItem(scope.row)' />
+        <DeleteButton @click='deleteItem(scope.row.id)' />
       </template>
     </el-table-column>
   </el-table>
@@ -78,11 +66,13 @@
 </template>
 <script setup>
 import http from '@/utils/http';
-import { nextTick, ref, toRaw, watchEffect } from 'vue';
+import { nextTick, ref, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { dayjs } from 'element-plus';
-import { Check, DeleteFilled, DocumentAdd } from '@element-plus/icons-vue';
+import { dayjs, ElMessageBox, ElNotification } from 'element-plus';
+import { DocumentAdd } from '@element-plus/icons-vue';
 import EditButton from '@/components/EditButton.vue';
+import CheckButton from '@/components/CheckButton.vue';
+import DeleteButton from '@/components/DeleteButton.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -161,6 +151,10 @@ const cancel = () => {
 
 
 const upsertItem = () => {
+  if (!todoItem.value.title) {
+    cancel();
+    return;
+  }
   const deadline = todoItem.value.deadline;
   const upload = { ...todoItem.value, deadline: deadline ? dayjs(deadline).valueOf() : null };
   http.post('/todo/upsert', upload).then(
@@ -169,6 +163,11 @@ const upsertItem = () => {
       visible.value = false;
       todoItem.value = {};
       loadData();
+      ElNotification({
+        title: '已添加',
+        message: '新任务来啦,尽快完成哦~',
+        type: 'success',
+      });
     },
     () => {
     },
@@ -178,7 +177,11 @@ const upsertItem = () => {
 const completeItem = (id) => {
   http.post(`/todo/complete/${id}`).then(
     (res) => {
-      console.log(res);
+      ElNotification({
+        title: '已完成',
+        message: '你太棒啦,继续努力哦~~',
+        type: 'success',
+      });
       loadData();
     },
     () => {
@@ -186,18 +189,34 @@ const completeItem = (id) => {
   );
 };
 const deleteItem = (id) => {
-  http.post(`/todo/delete/${id}`).then(
-    (res) => {
-      console.log(res);
-      loadData();
-    },
-    () => {
-    },
-  );
+  ElMessageBox.confirm('确认删除?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'error',
+  })
+    .then(() => {
+      http.post(`/todo/delete/${id}`).then(
+        (res) => {
+          ElNotification({
+            type: 'success',
+            message: '删除成功!',
+          });
+          loadData();
+        },
+        () => {
+        },
+      );
+    })
+    .catch(() => {
+      ElNotification({
+        type: 'info',
+        message: '已取消删除',
+      });
+    });
+
 };
 
 const editItem = (row) => {
-  console.log(toRaw(row));
   todoItem.value = { ...row };
   visible.value = true;
 };
