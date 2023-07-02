@@ -11,10 +11,11 @@ const globalRoutes = [
     name: 'login',
     meta: { title: '登录', anno: true },
   },
+  { path: '/:pathMatch(.*)*', redirect: '/404' },
 ];
 
 // 主入口路由(需嵌套上左右整体布局)
-const mainRoutes = {
+const mainRoutes = [{
   path: '/',
   redirect: '/index',
   component: () => import('@/views/Main.vue'),
@@ -42,13 +43,13 @@ const mainRoutes = {
       meta: { title: '题目' },
     },
   ],
-};
+}];
 
 export const router = createRouter({
   // 创建一个 hash 历史记录。
   history: createWebHistory(),
   // 应该添加到路由的初始路由列表。
-  routes: globalRoutes.concat(mainRoutes),
+  routes: mainRoutes.concat(globalRoutes),
   //routes: mainRoutes,
   // 是否应该禁止尾部斜杠。默认为假
   strict: true,
