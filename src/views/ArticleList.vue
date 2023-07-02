@@ -7,8 +7,8 @@
     </el-icon>
   </el-button>
 
-  <el-drawer v-model='visible' :destroy-on-close='true' :withHeader='false' size='100%' title='编辑文章'
-             @close='upsertArticle' @opened='renderEditor'>
+  <el-drawer v-model='visible' :before-close='confirmAdd' :destroy-on-close='true' :withHeader='false' size='100%'
+             title='编辑文章' @opened='renderEditor'>
     <div id='editContainer'></div>
   </el-drawer>
 
@@ -63,7 +63,7 @@ import { ref } from 'vue';
 import myAxios from '@/utils/http';
 import http from '@/utils/http';
 import { useRouter } from 'vue-router';
-import { dayjs } from 'element-plus';
+import { dayjs, ElMessageBox, ElNotification } from 'element-plus';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
 import { DocumentAdd } from '@element-plus/icons-vue';
@@ -85,14 +85,39 @@ const cherryInstance = ref(null);
 const renderEditor = () => {
   cherryInstance.value = new Cherry({
     id: 'editContainer',
+    value: newArticle.value.content,
   });
 };
 
-const upsertArticle = () => {
+const confirmAdd = (exit) => {
   newArticle.value.content = cherryInstance.value.getValue();
+  if (newArticle.value.content === '') {
+    exit();
+    return;
+  }
+  ElMessageBox.confirm('需要上传吗?', '提示', {
+    confirmButtonText: '上传',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(() => {
+      upsertArticle();
+      exit();
+    })
+    .catch(() => {
+      exit();
+    });
+};
+
+const upsertArticle = () => {
   http.post('/article/upsert', newArticle.value).then(
     (res) => {
       loadData();
+      ElNotification({
+        title: '已上传',
+        message: '新文章添加成功',
+        type: 'success',
+      });
     },
     () => {
     },
