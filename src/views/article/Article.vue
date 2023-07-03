@@ -1,17 +1,17 @@
 <template>
   <el-button circle
-             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] sm:right-[6rem] md:right-[10rem] lg:right-[14rem] xl:right-[18rem] 2xl:right-[26rem] bottom-16 sm:top-16'
+             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] sm:right-[6rem] md:right-[10rem] lg:right-[14rem] xl:right-[18rem] 2xl:right-[26rem] 3xl:right-[500px] bottom-16 sm:top-16'
              size='large' @click='visible = true'>
     <el-icon size='30'>
-      <edit />
+      <edit/>
     </el-icon>
   </el-button>
 
   <el-button circle
-             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] sm:right-[6rem] md:right-[10rem] lg:right-[14rem] xl:right-[18rem] 2xl:right-[26rem] bottom-32 sm:top-32'
+             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] sm:right-[6rem] md:right-[10rem] lg:right-[14rem] xl:right-[18rem] 2xl:right-[26rem] 3xl:right-[500px] bottom-32 sm:top-32'
              size='large' @click='deleteArticle'>
     <el-icon size='30'>
-      <delete />
+      <delete/>
     </el-icon>
   </el-button>
 
@@ -35,16 +35,16 @@
 </template>
 <script setup>
 
-import { onMounted, ref, watchEffect } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { Delete, Edit } from '@element-plus/icons-vue';
+import {onMounted, ref, watchEffect} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
+import {Delete, Edit} from '@element-plus/icons-vue';
 import http from '@/utils/http';
 import Cherry from 'cherry-markdown';
 import 'cherry-markdown/dist/cherry-markdown.min.css';
-import { ElMessageBox, ElNotification } from 'element-plus';
-import { Md5 } from 'ts-md5';
+import {ElMessageBox, ElNotification} from 'element-plus';
+import {Md5} from 'ts-md5';
 
-const data = ref({ content: '' });
+const data = ref({content: ''});
 const route = useRoute();
 const router = useRouter();
 const visible = ref(false);
@@ -63,28 +63,28 @@ const confirmEdit = (exit) => {
     cancelButtonText: '放弃',
     type: 'warning',
   })
-    .then(() => {
-      upsertArticle();
-      exit();
-    })
-    .catch(() => {
-      exit();
-    });
+      .then(() => {
+        upsertArticle();
+        exit();
+      })
+      .catch(() => {
+        exit();
+      });
 };
 
 const upsertArticle = () => {
   data.value.content = editCherry.value.getValue();
   http.post('/article/upsert', data.value).then(
-    (res) => {
-      loadData();
-      ElNotification({
-        title: '已修改',
-        message: '文章修改成功',
-        type: 'success',
-      });
-    },
-    () => {
-    },
+      (res) => {
+        loadData();
+        ElNotification({
+          title: '已修改',
+          message: '文章修改成功',
+          type: 'success',
+        });
+      },
+      () => {
+      },
   );
 };
 
@@ -94,37 +94,37 @@ const deleteArticle = () => {
     cancelButtonText: '取消',
     type: 'error',
   })
-    .then(() => {
-      http.post('/article/delete', data.value).then(
-        (res) => {
-          ElNotification({
-            type: 'success',
-            message: '删除成功!',
-          });
-          router.push('/article/list');
-        },
-        () => {
-        },
-      );
-    })
-    .catch(() => {
-      ElNotification({
-        type: 'info',
-        message: '取消删除',
+      .then(() => {
+        http.post('/article/delete', data.value).then(
+            (res) => {
+              ElNotification({
+                type: 'success',
+                message: '删除成功!',
+              });
+              router.push('/article/list');
+            },
+            () => {
+            },
+        );
+      })
+      .catch(() => {
+        ElNotification({
+          type: 'info',
+          message: '取消删除',
+        });
       });
-    });
 
 };
 
 const loadData = async () => {
   await http.post(`/article/${route.params.id}`).then(
-    (res) => {
-      data.value = res.data;
-      previewCherry.value.setValue('');
-      previewCherry.value.setValue(data.value.content);
-    },
-    () => {
-    },
+      (res) => {
+        data.value = res.data;
+        previewCherry.value.setValue('');
+        previewCherry.value.setValue(data.value.content);
+      },
+      () => {
+      },
   );
 };
 
