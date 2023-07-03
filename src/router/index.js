@@ -53,7 +53,7 @@ const mainRoutes = [{
     {
       path: '/article/list',
       component: () => import('@/views/article/ArticleList.vue'),
-      meta: { title: '文章' },
+      meta: { title: '文章', keepAlive: true },
     },
     {
       path: '/article/:id',

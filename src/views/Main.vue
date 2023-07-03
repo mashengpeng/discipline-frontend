@@ -16,40 +16,49 @@
       </el-menu>
     </el-header>
     <el-main class='p-0 h-[calc(100vh-100px)]'>
-      <el-scrollbar ref="scrollbar" @scroll="scroll">
+      <el-scrollbar ref='scrollbar' @scroll='scroll'>
         <div
-            class='md:pl-[calc(50vw-450px)] md:pr-[calc(50vw-450px)]  lg:pl-[62px] lg:pr-[62px]  lg:ml-[calc(50vw-512px)] lg:mr-[calc(50vw-512px)] pt-4 pb-4 min-h-[calc(100vh-100px)] lg:shadow-2xl'>
+          class='md:pl-[calc(50vw-450px)] md:pr-[calc(50vw-450px)]  lg:pl-[62px] lg:pr-[62px]  lg:ml-[calc(50vw-512px)] lg:mr-[calc(50vw-512px)] pt-4 pb-4 min-h-[calc(100vh-100px)] lg:shadow-2xl'>
           <el-button circle
                      class='flex-1 border-0 shadow fixed z-50 left-[4px] xl:left-[calc(50vw-600px)] bottom-16 lg:top-16'
-                     size='large' @click='router.back()'>
+                     size='large' @click='$router.back()'>
             <el-icon size='30'>
-              <caret-left/>
+              <caret-left />
             </el-icon>
           </el-button>
           <div></div>
           <el-button circle
                      class='flex-1 border-0 shadow fixed z-50 left-[4px] xl:left-[calc(50vw-600px)] lg:top-32 invisible lg:visible'
-                     size='large' @click='router.go(0)'>
+                     size='large' @click='$router.go(0)'>
             <el-icon size='30'>
-              <refresh/>
+              <refresh />
             </el-icon>
           </el-button>
-          <!--          -->
-          <!--          <router-view v-slot="{ Component }">-->
-          <!--            <keep-alive>-->
-          <!--              <component :is="Component"/>-->
-          <!--            </keep-alive>-->
-          <!--          </router-view>-->
 
-          <router-view/>
+          <router-view v-slot='{ Component }'>
+            <keep-alive>
+              <component
+                :is='Component'
+                v-if='$route.meta.keepAlive'
+                :key='$route.path'
+              />
+            </keep-alive>
+            <component
+              :is='Component'
+              v-if='!$route.meta.keepAlive'
+              :key='$route.path'
+            />
+          </router-view>
+
+
         </div>
-        <el-button v-if="backTopVisible"
+        <el-button v-if='backTopVisible'
                    circle
                    class='flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32'
                    size='large'
-                   @click="backTop">
+                   @click='backTop'>
           <el-icon size='30'>
-            <caret-top/>
+            <caret-top />
           </el-icon>
         </el-button>
       </el-scrollbar>
@@ -65,40 +74,40 @@
 
 </template>
 <script setup>
-import {useRoute, useRouter} from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import http from '@/utils/http';
-import {ElNotification} from 'element-plus';
-import {CaretLeft, CaretTop, Refresh} from '@element-plus/icons-vue';
-import {ref} from "vue";
+import { ElNotification } from 'element-plus';
+import { CaretLeft, CaretTop, Refresh } from '@element-plus/icons-vue';
+import { ref } from 'vue';
 
 const router = useRouter();
 const route = useRoute();
 
 const scrollbar = ref(null);
-const backTopVisible = ref(false)
+const backTopVisible = ref(false);
 
 const scroll = (e) => {
-  backTopVisible.value = e.scrollTop > 0
-}
+  backTopVisible.value = e.scrollTop > 0;
+};
 
 const backTop = () => {
-  scrollbar.value.setScrollTop(0)
-}
+  scrollbar.value.setScrollTop(0);
+};
 
 const activeMenu = () => {
   return route.path.split('/').slice(0, 2).join('/');
 };
 const logout = () => {
   http.get('/user/logout').then(
-      (res) => {
-        ElNotification({
-          title: '注销成功',
-          type: 'info',
-          duration: 1000,
-        });
-      },
-      () => {
-      },
+    (res) => {
+      ElNotification({
+        title: '注销成功',
+        type: 'info',
+        duration: 1000,
+      });
+    },
+    () => {
+    },
   );
 };
 

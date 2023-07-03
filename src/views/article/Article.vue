@@ -23,7 +23,7 @@
 
   <el-dialog
     v-model='diffVisible'
-    title='上传修改吗'
+    title='修改预览'
     width='75%'
   >
     <Diff
@@ -37,7 +37,7 @@
     <template #footer>
     <span class='dialog-footer'>
       <el-button @click='diffVisible = false'>取 消</el-button>
-      <el-button @click='upsertArticle'>确 定</el-button>
+      <el-button type='primary' @click='upsertArticle'>上 传</el-button>
     </span>
     </template>
   </el-dialog>
@@ -187,5 +187,9 @@ const renderEditor = () => {
 
 .el-drawer__body {
   padding: 0;
+}
+
+.el-button {
+  background-color: var(--el-button-bg-color, var(--el-color-white))
 }
 </style>
