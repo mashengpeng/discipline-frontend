@@ -113,6 +113,7 @@ const upsertArticle = () => {
   http.post('/article/upsert', newArticle.value).then(
       (res) => {
         loadData();
+        newArticle.value.content = ''
         ElNotification({
           title: '已上传',
           message: '新文章添加成功',

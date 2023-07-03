@@ -84,7 +84,6 @@ const backTop = () => {
 }
 
 const activeMenu = () => {
-  console.log(route.path.split('/').slice(0, 2).join('/'));
   return route.path.split('/').slice(0, 2).join('/');
 };
 const logout = () => {
