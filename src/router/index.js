@@ -7,17 +7,33 @@ const globalRoutes = [
     {
         path: '/404',
         component: () => import('@/views/global/404.vue'),
-        name: '404',
         meta: {title: '404未找到', anno: true}
     },
     {
         path: '/login',
         component: () => import('@/views/global/Login.vue'),
-        name: 'login',
         meta: {title: '登录', anno: true},
     },
     {path: '/:pathMatch(.*)*', redirect: '/404'},
 ];
+
+const toolsRoutes = [
+    {
+        path: '/tools',
+        component: () => import('@/views/tools/Tools.vue'),
+        meta: {title: '工具箱'},
+    },
+    {
+        path: '/tools/calendar',
+        component: () => import('@/views/tools/Calendar.vue'),
+        meta: {title: '日历'},
+    },
+    {
+        path: '/tools/formatter',
+        component: () => import('@/views/tools/Formatter.vue'),
+        meta: {title: '格式化'},
+    },
+]
 
 // 主入口路由(需嵌套上左右整体布局)
 const mainRoutes = [{
@@ -26,41 +42,28 @@ const mainRoutes = [{
     component: () => import('@/views/Main.vue'),
     // name: 'main',
     children: [
-        {path: '/index', component: () => import('@/views/Index.vue'), name: 'index', meta: {title: '首页'}},
-        {path: '/todo', component: () => import('@/views/Todo.vue'), name: 'todo', meta: {title: '代办事项'}},
+        {path: '/index', component: () => import('@/views/Index.vue'), meta: {title: '首页'}},
+        {path: '/todo', component: () => import('@/views/Todo.vue'), meta: {title: '代办事项'}},
         {path: '/article', redirect: '/article/list'},
         {
             path: '/article/list',
             component: () => import('@/views/article/ArticleList.vue'),
-            name: 'articleList',
             meta: {title: '文章'},
         },
         {
             path: '/article/:id',
             component: () => import('@/views/article/Article.vue'),
-            name: 'article',
             meta: {title: '文章'},
         },
         {
             path: '/question',
             component: () => import('@/views/Question.vue'),
-            name: 'question',
             meta: {title: '题目'},
         },
-        {
-            path: '/tools',
-            component: () => import('@/views/tools/Tools.vue'),
-            name: 'tools',
-            meta: {title: '工具箱'},
-        },
-        {
-            path: '/tools/calendar',
-            component: () => import('@/views/tools/Calendar.vue'),
-            name: '日历',
-            meta: {title: '日历'},
-        },
-    ],
+
+    ].concat(toolsRoutes),
 }];
+
 
 export const router = createRouter({
     // 创建一个 hash 历史记录。

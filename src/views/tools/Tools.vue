@@ -5,14 +5,15 @@ const router = useRouter();
 </script>
 
 <template>
-  <div class="flex mt-16 wrap">
-    <el-space>
-      <el-card class="w-[250px] h-[300px] flex justify-center items-center text-4xl" shadow="hover"
-               @click="router.push('/tools/calendar')">日历
-      </el-card>
-    </el-space>
 
-  </div>
+  <el-space class="mt-16" size="large" wrap>
+    <el-card class="w-[150px] h-[200px] flex justify-center items-center text-3xl" shadow="hover"
+             @click="router.push('/tools/calendar')">日历
+    </el-card>
+    <el-card class="w-[150px] h-[200px] flex justify-center items-center text-3xl" shadow="hover"
+             @click="router.push('/tools/formatter')">格式化
+    </el-card>
+  </el-space>
 
 
 </template>
