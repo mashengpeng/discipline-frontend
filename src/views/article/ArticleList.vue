@@ -137,12 +137,14 @@ const loadData = () => {
 loadData();
 </script>
 
-<style scoped>
-
-
+<style>
 .el-drawer__body {
   padding: 0;
 }
+
+</style>
+
+<style scoped>
 
 .el-button {
   background-color: var(--el-button-bg-color, var(--el-color-white))
