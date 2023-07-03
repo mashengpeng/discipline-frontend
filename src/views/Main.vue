@@ -34,13 +34,14 @@
               <refresh/>
             </el-icon>
           </el-button>
-          
-          <router-view v-slot="{ Component }">
-            <keep-alive>
-              <component :is="Component"/>
-            </keep-alive>
-          </router-view>
+          <!--          -->
+          <!--          <router-view v-slot="{ Component }">-->
+          <!--            <keep-alive>-->
+          <!--              <component :is="Component"/>-->
+          <!--            </keep-alive>-->
+          <!--          </router-view>-->
 
+          <router-view/>
         </div>
         <el-button v-if="backTopVisible"
                    circle

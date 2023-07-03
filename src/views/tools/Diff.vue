@@ -15,7 +15,7 @@
     <el-input v-model="current" :rows="10" class="w-[400px]" clearable placeholder="请输入内容" type="textarea"/>
   </div>
   <el-divider/>
-  <Diff
+  <DiffViewer
       :current="current"
       :folding="folding"
       :mode="mode"

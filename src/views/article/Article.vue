@@ -21,6 +21,27 @@
     <div id='editContainer'></div>
   </el-drawer>
 
+  <el-dialog
+      v-model="diffVisible"
+      title="提示"
+      width="50%"
+  >
+    <DiffViewer
+        :current="editedArticle.content"
+        :folding="false"
+        :prev="article.content"
+        mode="split"
+        theme="light"
+    />
+    <template #footer>
+    <span class="dialog-footer">
+      <el-button @click="diffVisible = false">取 消</el-button>
+      <el-button type="primary" @click="diffVisible = false">确 定</el-button>
+    </span>
+    </template>
+  </el-dialog>
+
+
   <div class='p-4'>
     <div id='previewContainer'></div>
     <div class='flex justify-evenly mt-8'>
@@ -29,7 +50,6 @@
       <el-button class='flex-1 border-0' @click=''>评论</el-button>
       <el-button class='flex-1 border-0' @click=''>下一篇</el-button>
     </div>
-
   </div>
 
 </template>
@@ -44,37 +64,41 @@ import 'cherry-markdown/dist/cherry-markdown.min.css';
 import {ElMessageBox, ElNotification} from 'element-plus';
 import {Md5} from 'ts-md5';
 
-const data = ref({content: ''});
+const article = ref({content: ''});
+const editedArticle = ref({content: ''});
+
 const route = useRoute();
 const router = useRouter();
 const visible = ref(false);
 const previewCherry = ref(null);
 const editCherry = ref(null);
-
+const diffVisible = ref(false);
 
 const confirmEdit = (exit) => {
-  console.log(Md5.hashStr(editCherry.value.getValue()), data.value.md5);
-  if (Md5.hashStr(editCherry.value.getValue()) === data.value.md5) {
+  editedArticle.value.content = editCherry.value.getValue()
+  if (Md5.hashStr(editedArticle.value.content) === article.value.md5) {
     exit();
     return;
   }
-  ElMessageBox.confirm('是否保存修改?', '提示', {
-    confirmButtonText: '保存',
-    cancelButtonText: '放弃',
-    type: 'warning',
-  })
-      .then(() => {
-        upsertArticle();
-        exit();
-      })
-      .catch(() => {
-        exit();
-      });
+  diffVisible.value = true;
+  console.log(article, editedArticle)
+  exit();
+  // ElMessageBox.confirm('是否上传修改?', '提示', {
+  //   confirmButtonText: '上传',
+  //   cancelButtonText: '放弃',
+  //   type: 'warning',
+  // })
+  //     .then(() => {
+  //       upsertArticle();
+  //       exit();
+  //     })
+  //     .catch(() => {
+  //       exit();
+  //     });
 };
 
 const upsertArticle = () => {
-  data.value.content = editCherry.value.getValue();
-  http.post('/article/upsert', data.value).then(
+  http.post('/article/upsert', editedArticle.value).then(
       (res) => {
         loadData();
         ElNotification({
@@ -95,7 +119,7 @@ const deleteArticle = () => {
     type: 'error',
   })
       .then(() => {
-        http.post('/article/delete', data.value).then(
+        http.post('/article/delete', article.value).then(
             (res) => {
               ElNotification({
                 type: 'success',
@@ -119,9 +143,10 @@ const deleteArticle = () => {
 const loadData = async () => {
   await http.post(`/article/${route.params.id}`).then(
       (res) => {
-        data.value = res.data;
+        article.value = {...res.data};
+        editedArticle.value = {...res.data};
         previewCherry.value.setValue('');
-        previewCherry.value.setValue(data.value.content);
+        previewCherry.value.setValue(article.value.content);
       },
       () => {
       },
@@ -147,7 +172,7 @@ onMounted(() => {
 const renderEditor = () => {
   editCherry.value = new Cherry({
     id: 'editContainer',
-    value: data.value.content,
+    value: editedArticle.value.content,
   });
 };
 

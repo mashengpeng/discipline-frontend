@@ -10,7 +10,9 @@ import VueDiff from 'vue-diff';
 import 'vue-diff/dist/index.css';
 
 const app = createApp(App);
-app.use(VueDiff);
+app.use(VueDiff, {
+    componentName: 'DiffViewer',
+});
 app.use(ElementPlus, {locale: zhCn});
 app.use(router);
 // for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
