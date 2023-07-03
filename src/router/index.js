@@ -33,6 +33,11 @@ const toolsRoutes = [
         component: () => import('@/views/tools/Formatter.vue'),
         meta: {title: '格式化'},
     },
+    {
+        path: '/tools/diff',
+        component: () => import('@/views/tools/Diff.vue'),
+        meta: {title: 'Diff'},
+    },
 ]
 
 // 主入口路由(需嵌套上左右整体布局)

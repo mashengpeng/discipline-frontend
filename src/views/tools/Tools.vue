@@ -13,6 +13,9 @@ const router = useRouter();
     <el-card class="w-[150px] h-[200px] flex justify-center items-center text-3xl" shadow="hover"
              @click="router.push('/tools/formatter')">格式化
     </el-card>
+    <el-card class="w-[150px] h-[200px] flex justify-center items-center text-3xl" shadow="hover"
+             @click="router.push('/tools/diff')">Diff
+    </el-card>
   </el-space>
 
 
