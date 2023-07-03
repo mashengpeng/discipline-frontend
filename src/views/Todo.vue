@@ -13,11 +13,11 @@
       </el-form-item>
       <el-form-item class='ml-16 mr-16' label='截止日期' prop='deadline'>
         <el-date-picker
-          v-model='todoItem.deadline'
-          :shortcuts='shortcuts'
-          placeholder='选择截止日期'
-          time-arrow-control
-          type='datetime'
+            v-model='todoItem.deadline'
+            :shortcuts='shortcuts'
+            placeholder='选择截止日期'
+            time-arrow-control
+            type='datetime'
         >
         </el-date-picker>
       </el-form-item>
@@ -30,10 +30,10 @@
   </el-dialog>
 
   <el-button circle
-             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] sm:right-[6rem] md:right-[10rem] lg:right-[14rem] xl:right-[18rem] 2xl:right-[26rem] bottom-16 sm:top-16'
+             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-16 lg:top-16'
              size='large' @click='visible = true'>
     <el-icon size='30'>
-      <document-add />
+      <document-add/>
     </el-icon>
   </el-button>
 
@@ -44,20 +44,20 @@
   </el-tabs>
 
   <el-table :data='data'>
-    <el-table-column label='事项' prop='title' />
-    <el-table-column label='描述' prop='description' />
-    <el-table-column label='持续时间' prop='duration' />
+    <el-table-column label='事项' prop='title'/>
+    <el-table-column label='描述' prop='description'/>
+    <el-table-column label='持续时间' prop='duration'/>
     <el-table-column label='倒计时' prop='deadline'>
       <template #default='scope'>
-        <el-countdown v-if='scope.row.deadline && scope.row.deadline >= dayjs()' :value='dayjs(scope.row.deadline)' />
-        <div v-else />
+        <el-countdown v-if='scope.row.deadline && scope.row.deadline >= dayjs()' :value='dayjs(scope.row.deadline)'/>
+        <div v-else/>
       </template>
     </el-table-column>
     <el-table-column align='right' fixed='right' label='' width='240px'>
       <template #default='scope'>
-        <CheckButton v-show="activeTab === 'undone'" @click='completeItem(scope.row.id)' />
-        <EditButton v-show="activeTab === 'undone'" @click='editItem(scope.row)' />
-        <DeleteButton @click='deleteItem(scope.row.id)' />
+        <CheckButton v-show="activeTab === 'undone'" @click='completeItem(scope.row.id)'/>
+        <EditButton v-show="activeTab === 'undone'" @click='editItem(scope.row)'/>
+        <DeleteButton @click='deleteItem(scope.row.id)'/>
       </template>
     </el-table-column>
   </el-table>
@@ -66,10 +66,10 @@
 </template>
 <script setup>
 import http from '@/utils/http';
-import { nextTick, ref, watchEffect } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { dayjs, ElMessageBox, ElNotification } from 'element-plus';
-import { DocumentAdd } from '@element-plus/icons-vue';
+import {nextTick, ref, watchEffect} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
+import {dayjs, ElMessageBox, ElNotification} from 'element-plus';
+import {DocumentAdd} from '@element-plus/icons-vue';
 import EditButton from '@/components/EditButton.vue';
 import CheckButton from '@/components/CheckButton.vue';
 import DeleteButton from '@/components/DeleteButton.vue';
@@ -83,13 +83,13 @@ const visible = ref(false);
 const todoItem = ref({});
 
 const querySearch = (queryString, callback) => {
-  http.get('/todo/prompt', { params: { keyword: queryString } }).then(
-    (res) => {
+  http.get('/todo/prompt', {params: {keyword: queryString}}).then(
+      (res) => {
 
-      callback(res.data);
-    },
-    () => {
-    },
+        callback(res.data);
+      },
+      () => {
+      },
   );
 };
 
@@ -123,17 +123,17 @@ const shortcuts = [
 
 const tabChange = () => {
   nextTick(() => {
-    router.push({ path: '/todo', query: { tab: activeTab.value } });
+    router.push({path: '/todo', query: {tab: activeTab.value}});
   });
 };
 
 const loadData = () => {
   http.get(`/todo/${activeTab.value}`).then(
-    (res) => {
-      data.value = res.data;
-    },
-    () => {
-    },
+      (res) => {
+        data.value = res.data;
+      },
+      () => {
+      },
   );
 };
 
@@ -154,36 +154,36 @@ const upsertItem = () => {
     return;
   }
   const deadline = todoItem.value.deadline;
-  const upload = { ...todoItem.value, deadline: deadline ? dayjs(deadline).valueOf() : null };
+  const upload = {...todoItem.value, deadline: deadline ? dayjs(deadline).valueOf() : null};
   http.post('/todo/upsert', upload).then(
-    (res) => {
-      data.value = res.data;
-      visible.value = false;
-      todoItem.value = {};
-      loadData();
-      ElNotification({
-        title: '已添加',
-        message: '新任务来啦,尽快完成哦~',
-        type: 'success',
-      });
-    },
-    () => {
-    },
+      (res) => {
+        data.value = res.data;
+        visible.value = false;
+        todoItem.value = {};
+        loadData();
+        ElNotification({
+          title: '已添加',
+          message: '新任务来啦,尽快完成哦~',
+          type: 'success',
+        });
+      },
+      () => {
+      },
   );
 };
 
 const completeItem = (id) => {
   http.post(`/todo/complete/${id}`).then(
-    (res) => {
-      ElNotification({
-        title: '已完成',
-        message: '你太棒啦,继续努力哦~~',
-        type: 'success',
-      });
-      loadData();
-    },
-    () => {
-    },
+      (res) => {
+        ElNotification({
+          title: '已完成',
+          message: '你太棒啦,继续努力哦~~',
+          type: 'success',
+        });
+        loadData();
+      },
+      () => {
+      },
   );
 };
 const deleteItem = (id) => {
@@ -192,30 +192,30 @@ const deleteItem = (id) => {
     cancelButtonText: '取消',
     type: 'error',
   })
-    .then(() => {
-      http.post(`/todo/delete/${id}`).then(
-        (res) => {
-          ElNotification({
-            type: 'success',
-            message: '删除成功!',
-          });
-          loadData();
-        },
-        () => {
-        },
-      );
-    })
-    .catch(() => {
-      ElNotification({
-        type: 'info',
-        message: '已取消删除',
+      .then(() => {
+        http.post(`/todo/delete/${id}`).then(
+            (res) => {
+              ElNotification({
+                type: 'success',
+                message: '删除成功!',
+              });
+              loadData();
+            },
+            () => {
+            },
+        );
+      })
+      .catch(() => {
+        ElNotification({
+          type: 'info',
+          message: '已取消删除',
+        });
       });
-    });
 
 };
 
 const editItem = (row) => {
-  todoItem.value = { ...row };
+  todoItem.value = {...row};
   visible.value = true;
 };
 

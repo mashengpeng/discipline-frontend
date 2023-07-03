@@ -3,7 +3,7 @@
     <el-header class='flex justify-center p-0 h-[50px]'>
       <el-menu :default-active='activeMenu()'
                :ellipsis='false'
-               class='w-full sm:pl-16 sm:pr-16 md:pl-32 md:pr-32 lg:pl-48 lg:pr-48  xl:pl-64 xl:pr-64 2xl:pl-96 2xl:pr-96 3xl:pl-[600px] 3xl:pr-[600px]'
+               class='w-full lg:pl-[calc(50vw-512px)] lg:pr-[calc(50vw-512px)]'
                mode='horizontal'
                router
       >
@@ -16,11 +16,11 @@
       </el-menu>
     </el-header>
     <el-main class='p-0 h-[calc(100vh-100px)]'>
-      <el-scrollbar>
+      <el-scrollbar ref="scrollbar" @scroll="scroll">
         <div
-            class='sm:ml-16 sm:mr-16 md:ml-32 md:mr-32 lg:ml-48 lg:mr-48  xl:ml-64 xl:mr-64 2xl:ml-96 2xl:mr-96 3xl:ml-[600px] 3xl:mr-[600px] sm:pl-32 sm:pr-32 sm:pt-4 sm:pb-4 min-h-[calc(100vh-100px)] lg:shadow-2xl'>
+            class='md:pl-[calc(50vw-450px)] md:pr-[calc(50vw-450px)]  lg:pl-[62px] lg:pr-[62px]  lg:ml-[calc(50vw-512px)] lg:mr-[calc(50vw-512px)] pt-4 pb-4 min-h-[calc(100vh-100px)] lg:shadow-2xl'>
           <el-button circle
-                     class='no-transparent flex-1 border-0 shadow fixed z-50 left-[4px] sm:left-[6rem] md:left-[10rem] lg:left-[14rem] xl:left-[18rem] 2xl:left-[26rem] 3xl:left-[500px] bottom-16 sm:top-16'
+                     class='flex-1 border-0 shadow fixed z-50 left-[4px] xl:left-[calc(50vw-600px)] bottom-16 lg:top-16'
                      size='large' @click='router.back()'>
             <el-icon size='30'>
               <caret-left/>
@@ -28,17 +28,28 @@
           </el-button>
           <div></div>
           <el-button circle
-                     class='no-transparent flex-1 border-0 shadow fixed z-50 left-[4px] sm:left-[6rem] md:left-[10rem] lg:left-[14rem] xl:left-[18rem] 2xl:left-[26rem] 3xl:left-[500px] bottom-32 sm:top-32'
+                     class='flex-1 border-0 shadow fixed z-50 left-[4px] xl:left-[calc(50vw-600px)] lg:top-32 invisible lg:visible'
                      size='large' @click='router.go(0)'>
             <el-icon size='30'>
               <refresh/>
             </el-icon>
           </el-button>
-          <keep-alive>
-            <router-view></router-view>
-          </keep-alive>
+          <router-view v-slot="{ Component }">
+            <keep-alive>
+              <component :is="Component"/>
+            </keep-alive>
+          </router-view>
+
         </div>
-        <el-backtop :bottom='80' :right='40' target='.el-scrollbar__wrap'/>
+        <el-button v-if="backTopVisible"
+                   circle
+                   class='flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32'
+                   size='large'
+                   @click="backTop">
+          <el-icon size='30'>
+            <caret-top/>
+          </el-icon>
+        </el-button>
       </el-scrollbar>
     </el-main>
     <el-footer class='p-0 h-[50px] flex justify-center bg-white border'>
@@ -55,11 +66,22 @@
 import {useRoute, useRouter} from 'vue-router';
 import http from '@/utils/http';
 import {ElNotification} from 'element-plus';
-import {CaretLeft, Refresh} from '@element-plus/icons-vue';
+import {CaretLeft, CaretTop, Refresh} from '@element-plus/icons-vue';
+import {ref} from "vue";
 
 const router = useRouter();
 const route = useRoute();
 
+const scrollbar = ref(null);
+const backTopVisible = ref(false)
+
+const scroll = (e) => {
+  backTopVisible.value = e.scrollTop > 0
+}
+
+const backTop = () => {
+  scrollbar.value.setScrollTop(0)
+}
 
 const activeMenu = () => {
   console.log(route.path.split('/').slice(0, 2).join('/'));

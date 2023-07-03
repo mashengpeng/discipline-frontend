@@ -1,6 +1,6 @@
 <template>
   <el-button circle
-             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] sm:right-[6rem] md:right-[10rem] lg:right-[14rem] xl:right-[18rem] 2xl:right-[26rem] 3xl:right-[500px] bottom-16 sm:top-16'
+             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-16 lg:top-16'
              size='large' @click='visible = true'>
     <el-icon size='30'>
       <edit/>
@@ -8,7 +8,7 @@
   </el-button>
 
   <el-button circle
-             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] sm:right-[6rem] md:right-[10rem] lg:right-[14rem] xl:right-[18rem] 2xl:right-[26rem] 3xl:right-[500px] bottom-32 sm:top-32'
+             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32 lg:top-32'
              size='large' @click='deleteArticle'>
     <el-icon size='30'>
       <delete/>
