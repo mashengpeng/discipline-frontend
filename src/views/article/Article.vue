@@ -46,10 +46,10 @@
   <div class='p-4'>
     <div id='previewContainer'></div>
     <div class='flex justify-evenly mt-8'>
-      <el-button class='flex-1 border-0' @click="previewCherry.setValue('asdfsdf') ">上一篇</el-button>
+      <el-button class='flex-1 border-0' @click='prevArticle'>上一篇</el-button>
       <el-button class='flex-1 border-0' @click=''>赞</el-button>
       <el-button class='flex-1 border-0' @click=''>评论</el-button>
-      <el-button class='flex-1 border-0' @click=''>下一篇</el-button>
+      <el-button class='flex-1 border-0' @click='nextArticle'>下一篇</el-button>
     </div>
   </div>
 
@@ -85,6 +85,26 @@ const confirmEdit = (exit) => {
   console.log(article, editedArticle);
   exit();
 
+};
+
+const prevArticle = () => {
+  http.get('/article/prev', { params: { id: article.value.id } }).then(
+    (res) => {
+      router.push(`/article/${res.data}`);
+    },
+    () => {
+    },
+  );
+};
+
+const nextArticle = () => {
+  http.get('/article/next', { params: { id: article.value.id } }).then(
+    (res) => {
+      router.push(`/article/${res.data}`);
+    },
+    () => {
+    },
+  );
 };
 
 const upsertArticle = () => {
@@ -131,8 +151,8 @@ const deleteArticle = () => {
 
 };
 
-const loadData = async () => {
-  await http.post(`/article/${route.params.id}`).then(
+const loadData = () => {
+  http.post(`/article/${route.params.id}`).then(
     (res) => {
       article.value = { ...res.data };
       editedArticle.value = { ...res.data };
