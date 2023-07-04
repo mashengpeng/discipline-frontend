@@ -17,6 +17,14 @@
 
   <el-button circle
              class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-48 lg:top-48'
+             size='large' @click='deleteQuestion'>
+    <el-icon size='30'>
+      <delete/>
+    </el-icon>
+  </el-button>
+
+  <el-button circle
+             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-64 lg:top-64'
              size='large' @click='searchQuestion'>
     <el-icon size='30'>
       <search/>
@@ -24,17 +32,17 @@
   </el-button>
 
   <el-button circle
-             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-64 lg:top-64'
+             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-80 lg:top-80'
              size='large' @click='foldAnswer = !foldAnswer'>
     <el-icon size='30'>
       <magic-stick/>
     </el-icon>
   </el-button>
 
-  <el-button v-if="$route.params.x === 'random'"
-             circle
-             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-80 lg:top-80'
-             size='large' @click='loadData'>
+  <el-button
+      circle
+      class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-96 lg:top-96'
+      size='large' @click='randomQuestion'>
     <el-icon size='30'>
       <refresh-left/>
     </el-icon>
@@ -47,7 +55,8 @@
       title="编辑答案"
       width="35%"
   >
-    <el-input v-model="editedQuestion.answer" autosize placeholder="请输入内容" type="textarea">
+    <el-input v-model="editedQuestion.answer" :autosize="{ minRows: 20, maxRows: 20}" autosize placeholder="请输入内容"
+              type="textarea">
     </el-input>
   </el-dialog>
 
@@ -110,9 +119,9 @@
 import {ref} from 'vue'
 import http from '@/utils/http'
 import {useRoute, useRouter} from "vue-router";
-import {dayjs, ElNotification} from "element-plus";
+import {dayjs, ElMessageBox, ElNotification} from "element-plus";
 import relativeTime from 'dayjs/plugin/relativeTime';
-import {Edit, List, MagicStick, RefreshLeft, Search} from "@element-plus/icons-vue";
+import {Delete, Edit, List, MagicStick, RefreshLeft, Search} from "@element-plus/icons-vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -129,7 +138,40 @@ const searchQuestion = () => {
   window.open(`https://www.google.com/search?q=${question.value.title}`)
 }
 
+const deleteQuestion = () => {
+  ElMessageBox.confirm('确认删除题目?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'error',
+  })
+      .then(() => {
+        http.post('/question/delete', question.value).then(
+            (res) => {
+              ElNotification({
+                type: 'success',
+                message: '删除成功!',
+              });
+              router.push('/question/list');
+            },
+            () => {
+            },
+        );
+      })
+      .catch(() => {
+        ElNotification({
+          type: 'info',
+          message: '取消删除',
+        });
+      });
+}
 
+const randomQuestion = () => {
+  if (route.params.x === 'random') {
+    loadData();
+  } else {
+    router.push('/question/random')
+  }
+}
 const showDiff = (exit) => {
   exit();
   if (question.value.answer === editedQuestion.value.answer) {

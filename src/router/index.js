@@ -57,7 +57,7 @@ const articleRoutes = [
 const questionRoutes = [
     {
         path: '/question',
-        redirect: '/question/random',
+        redirect: '/question/list',
     },
     {
         path: '/question/list',
@@ -98,7 +98,6 @@ export const router = createRouter({
 router.beforeEach((to, from, next) => {
 
     document.title = to.meta.title ?? 'vue';
-
     if (to.meta.anno) {
         next();
         return;
