@@ -2,14 +2,11 @@
 import {ref} from 'vue'
 import http from '@/utils/http'
 
-const data = ref({
-  tag: ''
-});
+const data = ref(null);
 const loadData = () => {
-  http.post("/question/random").then(
+  http.post("/question/list").then(
       (res) => {
-        console.log(res)
-        data.value = res.data[0];
+        data.value = res.data;
       },
       () => {
       }
@@ -23,7 +20,14 @@ const edit = () => {
 
 </script>
 <template>
-  题目列表
+  <el-card v-for='question in data' :key='question.id' :body-style="{ padding: '0px' }"
+           class='box-card border-0 m-1 p-4'
+           shadow='hover'>
+    <div class='hover:cursor-pointer' @click='$router.push(`/question/${question.id}`)'>
+      {{ question.title }}
+    </div>
+
+  </el-card>
 </template>
 
 <style scoped>

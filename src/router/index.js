@@ -14,7 +14,7 @@ const globalRoutes = [
         component: () => import('@/views/global/Login.vue'),
         meta: {title: '登录', anno: true},
     },
-    {path: '/:pathMatch(.*)*', redirect: '/404'},
+    {path: '/:pathMatch(.*)*', redirect: '/404', anno: true},
 ];
 
 const toolsRoutes = [
@@ -57,17 +57,17 @@ const articleRoutes = [
 const questionRoutes = [
     {
         path: '/question',
-        redirect: '/question/list',
+        redirect: '/question/random',
     },
     {
         path: '/question/list',
         component: () => import('@/views/question/QuestionList.vue'),
-        meta: {title: '文章'},
+        meta: {title: '题目'},
     },
     {
-        path: '/question/:id',
+        path: '/question/:x',
         component: () => import('@/views/question/Question.vue'),
-        meta: {title: '文章'},
+        meta: {title: '题目'},
     },
 ]
 
