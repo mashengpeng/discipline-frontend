@@ -156,6 +156,7 @@ const deleteQuestion = () => {
             () => {
             },
         );
+
       })
       .catch(() => {
         ElNotification({
@@ -174,7 +175,7 @@ const randomQuestion = () => {
 }
 const showDiff = (exit) => {
   exit();
-  if (question.value.answer === editedQuestion.value.answer) {
+  if (question.value.answer && question.value.answer === editedQuestion.value.answer) {
     return;
   }
   diffVisible.value = true;
@@ -207,7 +208,9 @@ const loadData = (id) => {
   }
   http.post(`/question/${param}`).then(
       (res) => {
-
+        if (!res.data.answer) {
+          res.data.answer = '';
+        }
         question.value = {...res.data};
         editedQuestion.value = {...res.data};
       },
