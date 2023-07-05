@@ -1,7 +1,4 @@
 <template>
-  <div>
-    <el-calendar v-model='value'/>
-  </div>
   <div class="flex justify-center mt-16">
     <el-space>
       <el-progress :color="percentage2color" :percentage="year" type="circle">年</el-progress>
@@ -18,8 +15,6 @@
 <script setup>
 import {ref} from 'vue';
 import {dayjs} from "element-plus";
-
-const value = ref(new Date());
 
 const year = ref(0)
 const month = ref(0)
