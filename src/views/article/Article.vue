@@ -18,7 +18,7 @@
   <el-drawer v-model='visible' :before-close='confirmEdit' :destroy-on-close='true' :withHeader='false' class=''
              size='100%'
              title='编辑文章' @opened='renderEditor'>
-    <div id='editContainer'></div>
+    <div id='editContainer' class="shadow-2xl"></div>
   </el-drawer>
 
   <el-dialog
@@ -28,7 +28,7 @@
   >
     <Diff
         :current='editedArticle.content'
-        :folding='false'
+        :folding='true'
         :prev='article.content'
         mode='split'
         theme='light'
@@ -204,10 +204,6 @@ const renderEditor = () => {
 .cherry {
   box-shadow: none;
   background-color: white;
-}
-
-.el-drawer__body {
-  padding: 0;
 }
 
 </style>

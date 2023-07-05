@@ -116,13 +116,13 @@ router.beforeEach((to, from, next) => {
                     duration: 1000,
                 });
                 localStorage.clear();
-                next('login');
+                next('/login');
             } else {
                 next();
             }
         },
         () => {
-            next('login');
+            next('/login');
         },
     );
 });

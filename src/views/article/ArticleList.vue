@@ -7,9 +7,11 @@
     </el-icon>
   </el-button>
 
-  <el-drawer v-model='visible' :before-close='confirmAdd' :destroy-on-close='true' :withHeader='false' size='100%'
-             title='编辑文章' @opened='renderEditor'>
-    <div id='editContainer'></div>
+  <el-drawer v-model='visible' :before-close='confirmAdd' :destroy-on-close='true' :withHeader='false'
+             size='100%' title='编辑文章' @opened='renderEditor'>
+    <div id='editContainer' class="shadow-2xl">
+    </div>
+
   </el-drawer>
 
   <div class='overflow-hidden'>
@@ -136,13 +138,6 @@ const loadData = () => {
 };
 loadData();
 </script>
-
-<style>
-.el-drawer__body {
-  padding: 0;
-}
-
-</style>
 
 <style scoped>
 
