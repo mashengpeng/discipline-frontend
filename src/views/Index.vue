@@ -9,7 +9,6 @@
       <el-progress :color="percentage2color" :percentage="minute" type="circle">分</el-progress>
     </el-space>
   </div>
-
 </template>
 
 <script setup>

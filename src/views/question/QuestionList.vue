@@ -1,6 +1,6 @@
 <template>
   <el-button circle
-             class='flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-16 lg:top-16'
+             class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-16 lg:top-16'
              size='large' @click='showAdd'>
     <el-icon size='30'>
       <circle-plus/>
@@ -9,7 +9,7 @@
 
   <el-button
       circle
-      class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32 lg:top-32'
+      class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32 lg:top-32'
       size='large' @click='$router.push("/question/random")'>
     <el-icon size='30'>
       <refresh-left/>

@@ -1,6 +1,6 @@
 <template>
   <el-button circle
-             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-16 lg:top-16'
+             class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-16 lg:top-16'
              size='large' @click='$router.push("/question/list")'>
     <el-icon size='30'>
       <list/>
@@ -8,7 +8,7 @@
   </el-button>
 
   <el-button circle
-             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32 lg:top-32'
+             class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32 lg:top-32'
              size='large' @click='showAdd'>
     <el-icon size='30'>
       <edit/>
@@ -16,7 +16,7 @@
   </el-button>
 
   <el-button circle
-             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-48 lg:top-48'
+             class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-48 lg:top-48'
              size='large' @click='deleteQuestion'>
     <el-icon size='30'>
       <delete/>
@@ -24,7 +24,7 @@
   </el-button>
 
   <el-button circle
-             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-64 lg:top-64'
+             class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-64 lg:top-64'
              size='large' @click='searchQuestion'>
     <el-icon size='30'>
       <search/>
@@ -32,7 +32,7 @@
   </el-button>
 
   <el-button circle
-             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-80 lg:top-80'
+             class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-80 lg:top-80'
              size='large' @click='foldAnswer = !foldAnswer'>
     <el-icon size='30'>
       <magic-stick/>
@@ -41,7 +41,7 @@
 
   <el-button
       circle
-      class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-96 lg:top-96'
+      class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-96 lg:top-96'
       size='large' @click='randomQuestion'>
     <el-icon size='30'>
       <refresh-left/>

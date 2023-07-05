@@ -30,7 +30,7 @@
   </el-dialog>
 
   <el-button circle
-             class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-16 lg:top-16'
+             class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-16 lg:top-16'
              size='large' @click='visible = true'>
     <el-icon size='30'>
       <document-add/>
