@@ -48,7 +48,7 @@
             <el-text truncated>{{ article.content }}</el-text>
           </div>
         </div>
-        <div class='flex-none w-[150px] h-[150px] ml-4'>
+        <div v-if="article.id % 2 === 0" class='flex-none w-[150px] h-[150px] ml-4'>
           <el-image class='w-full h-full' fit='contain'
                     src='https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'></el-image>
         </div>

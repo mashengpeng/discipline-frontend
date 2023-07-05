@@ -60,15 +60,15 @@
 
     <Diff v-else
           :current='editedQuestion.answer'
-          :folding='true'
+          :folding='false'
           :prev='question.answer'
+          :virtual-scroll="true"
           mode='split'
           theme='light'
     />
 
     <template #footer>
-
-      <el-steps :active="progress" :space="200" finish-status="success" simple>
+      <el-steps :active="progress" finish-status="success" simple>
         <el-step title="编辑"></el-step>
         <el-step title="确认"></el-step>
       </el-steps>
@@ -147,7 +147,7 @@ const deleteQuestion = () => {
             (res) => {
               ElNotification({
                 type: 'success',
-                message: '删除成功!',
+                title: '删除成功!',
               });
               router.push('/question/list');
             },
@@ -159,7 +159,7 @@ const deleteQuestion = () => {
       .catch(() => {
         ElNotification({
           type: 'info',
-          message: '取消删除',
+          title: '取消删除',
         });
       });
 }
@@ -197,8 +197,7 @@ const next = () => {
         loadData(question.value.id);
         foldAnswer.value = false;
         ElNotification({
-          title: '已修改',
-          message: '答案修改成功',
+          title: '修改成功',
           type: 'success',
         });
       },
