@@ -18,7 +18,7 @@
 
   <el-dialog
       v-model="addVisible"
-      title="添加问题"
+      :title="text.title[progress]"
       width="900px"
   >
     <el-input v-if="progress === 0" v-model="importContent" :autosize="{ minRows: 20, maxRows: 20}" autosize
@@ -38,10 +38,7 @@
         </el-steps>
       </div>
       <el-button v-show="progress !== 0" size="large" style="margin-top: 12px;" @click="prev">上一步</el-button>
-      <el-button size="large" style="margin-top: 12px;" @click="next">{{
-          progress === 0 ? '下一步' : '提交'
-        }}
-      </el-button>
+      <el-button class="mt-4" size="large" @click="next">{{ text.button[progress] }}</el-button>
     </template>
 
   </el-dialog>
@@ -68,7 +65,7 @@ const addVisible = ref(false);
 const importContent = ref("")
 const progress = ref(0)
 const confirmContent = ref([])
-
+const text = ref({title: ['导入问题', '选择导入'], button: ['下一步', '确认']})
 
 const showAdd = () => {
   addVisible.value = true;
@@ -123,9 +120,6 @@ const next = () => {
       () => {
       }
   );
-}
-const edit = () => {
-
 }
 
 </script>

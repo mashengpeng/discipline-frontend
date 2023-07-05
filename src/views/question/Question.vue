@@ -9,7 +9,7 @@
 
   <el-button circle
              class='no-transparent flex-1 border-0 shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32 lg:top-32'
-             size='large' @click='editVisible = true'>
+             size='large' @click='showAdd'>
     <el-icon size='30'>
       <edit/>
     </el-icon>
@@ -51,33 +51,30 @@
 
   <el-dialog
       v-model="editVisible"
-      :before-close="showDiff"
-      title="编辑答案"
+      :title="text.title[progress]"
       width="35%"
   >
-    <el-input v-model="editedQuestion.answer" :autosize="{ minRows: 20, maxRows: 20}" autosize placeholder="请输入内容"
-              type="textarea">
+    <el-input v-if="progress === 0" v-model="editedQuestion.answer" :autosize="{ minRows: 20, maxRows: 20}" autosize
+              placeholder="请输入内容" type="textarea">
     </el-input>
-  </el-dialog>
 
-  <el-dialog
-      v-model="diffVisible"
-      :before-close="confirmEdit"
-      title="确认"
-      width="35%"
-  >
-    <Diff
-        :current='editedQuestion.answer'
-        :folding='true'
-        :prev='question.answer'
-        mode='split'
-        theme='light'
+    <Diff v-else
+          :current='editedQuestion.answer'
+          :folding='true'
+          :prev='question.answer'
+          mode='split'
+          theme='light'
     />
+
     <template #footer>
-    <span class="dialog-footer">
-      <el-button @click="diffVisible = false">取 消</el-button>
-      <el-button type="primary" @click="updateQuestion">确 定</el-button>
-    </span>
+
+      <el-steps :active="progress" :space="200" finish-status="success" simple>
+        <el-step title="编辑"></el-step>
+        <el-step title="确认"></el-step>
+      </el-steps>
+
+      <el-button v-show="progress !== 0" size="large" style="margin-top: 12px;" @click="prev">上一步</el-button>
+      <el-button class="mt-4" size="large" @click="next">{{ text.button[progress] }}</el-button>
     </template>
   </el-dialog>
 
@@ -128,8 +125,9 @@ const router = useRouter();
 const question = ref({});
 const foldAnswer = ref(true);
 const editVisible = ref(false);
-const diffVisible = ref(false);
-const editedQuestion = ref({})
+const editedQuestion = ref({});
+const progress = ref(0);
+const text = ref({title: ['编辑答案', '修改预览'], button: ['下一步', '确认']})
 
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');
@@ -173,21 +171,29 @@ const randomQuestion = () => {
     router.push('/question/random')
   }
 }
-const showDiff = (exit) => {
-  exit();
-  if (question.value.answer && question.value.answer === editedQuestion.value.answer) {
-    return;
+
+const prev = () => {
+  if (progress.value !== 0) {
+    progress.value = progress.value - 1;
   }
-  diffVisible.value = true;
-}
-const confirmEdit = (exit) => {
-  exit()
 }
 
-const updateQuestion = () => {
+
+const next = () => {
+  if (progress.value === 0) {
+    if (question.value.answer === editedQuestion.value.answer) {
+      ElNotification({
+        title: '内容未修改',
+        type: 'info',
+      });
+      return;
+    }
+    progress.value = progress.value + 1;
+    return;
+  }
   http.post('/question/update', editedQuestion.value).then(
       (res) => {
-        diffVisible.value = false;
+        editVisible.value = false;
         loadData(question.value.id);
         foldAnswer.value = false;
         ElNotification({
@@ -199,6 +205,11 @@ const updateQuestion = () => {
       () => {
       },
   );
+}
+
+const showAdd = () => {
+  editVisible.value = true;
+  progress.value = 0;
 }
 
 const loadData = (id) => {
