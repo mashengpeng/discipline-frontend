@@ -25,8 +25,11 @@
               placeholder="请输入内容" type="textarea">
     </el-input>
     <div v-else>
-      <el-checkbox v-for="e in confirmContent" v-model="e.checked" :label="e.title" class="block"
-                   size="large"></el-checkbox>
+      <el-scrollbar height="430px">
+        <el-checkbox v-for="e in confirmContent" v-model="e.checked" :label="e.title" class="block"
+                     size="large"></el-checkbox>
+      </el-scrollbar>
+
     </div>
 
 
