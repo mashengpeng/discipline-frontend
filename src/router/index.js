@@ -62,12 +62,12 @@ const questionRoutes = [
   {
     path: '/question/list',
     component: () => import('@/views/question/QuestionList.vue'),
-    meta: { title: '题目' },
+    meta: { title: '题目', keepAlive: true },
   },
   {
     path: '/question/:x',
     component: () => import('@/views/question/Question.vue'),
-    meta: { title: '题目' },
+    meta: { title: '题目', keepAlive: true },
   },
 ];
 
