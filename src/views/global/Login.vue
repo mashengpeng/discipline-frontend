@@ -1,8 +1,11 @@
 <template>
-  <div class='flex justify-center items-center h-screen'>
-    <el-button @click='login'>登陆</el-button>
-    <!--    <el-button @click="logout">登出</el-button>-->
-    <el-button @click='check'>检查是否登陆</el-button>
+
+  <div class='h-screen flex justify-center items-center'>
+    <el-space>
+      <el-input v-model='username' placeholder='请输入用户名'></el-input>
+      <el-button @click='login'>登陆</el-button>
+    </el-space>
+
   </div>
 
 
@@ -13,17 +16,23 @@
 import http from '@/utils/http';
 import { useRouter } from 'vue-router';
 import { ElNotification } from 'element-plus';
+import { ref } from 'vue';
+
+const username = ref('');
 
 
 const router = useRouter();
 const login = () => {
 
 
-  http.get('/user/login', {
-    headers: {
-      REMOTE_ADDR: sessionStorage.getItem('ip'),
-    },
-  }).then(
+  http.get('/user/login', { params: { username: username.value } },
+    // {
+    //   headers: {
+    //     REMOTE_ADDR: sessionStorage.getItem('ip'),
+    //   },
+    //   username: username.value,
+    // }
+  ).then(
     (res) => {
       if (res.message === 'success') {
         ElNotification({
@@ -42,28 +51,6 @@ const login = () => {
   );
 };
 
-const check = () => {
-  http.get('/user/isLogin').then(
-    (res) => {
-      if (res.data) {
-        ElNotification({
-          title: '已登录',
-          type: 'success',
-          duration: 1000,
-        });
-      } else {
-        ElNotification({
-          title: '未登录',
-          type: 'info',
-          duration: 1000,
-        });
-      }
-
-    },
-    () => {
-    },
-  );
-};
 </script>
 
 
