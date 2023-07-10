@@ -66,7 +66,7 @@
 </template>
 <script setup>
 import http from '@/utils/http';
-import {nextTick, ref, watchEffect} from 'vue';
+import {nextTick, onActivated, ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import {dayjs, ElMessageBox, ElNotification} from 'element-plus';
 import {DocumentAdd} from '@element-plus/icons-vue';
@@ -137,9 +137,9 @@ const loadData = () => {
   );
 };
 
-watchEffect(() => {
+onActivated(() => {
   loadData();
-});
+})
 
 
 const cancel = () => {

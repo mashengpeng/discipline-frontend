@@ -12,7 +12,7 @@
         <el-menu-item class='flex-1' index='/article'>文章</el-menu-item>
         <el-menu-item class='flex-1' index='/question'>题目</el-menu-item>
         <el-menu-item class='flex-1' index='/tools'>工具箱</el-menu-item>
-        <el-menu-item class='flex-1' index='/login' @click='logout'>注销</el-menu-item>
+        <el-menu-item class='flex-1' index='/me'>我的</el-menu-item>
       </el-menu>
     </el-header>
     <el-main class='p-0 h-[calc(100vh-100px)]'>
@@ -75,8 +75,6 @@
 </template>
 <script setup>
 import {useRoute, useRouter} from 'vue-router';
-import http from '@/utils/http';
-import {ElNotification} from 'element-plus';
 import {CaretLeft, CaretTop, Refresh} from '@element-plus/icons-vue';
 import {ref} from 'vue';
 
@@ -96,19 +94,6 @@ const backTop = () => {
 
 const activeMenu = () => {
   return route.path.split('/').slice(0, 2).join('/');
-};
-const logout = () => {
-  http.get('/user/logout').then(
-      (res) => {
-        ElNotification({
-          title: '注销成功',
-          type: 'info',
-          duration: 1000,
-        });
-      },
-      () => {
-      },
-  );
 };
 
 </script>

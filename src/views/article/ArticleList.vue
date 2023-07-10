@@ -143,7 +143,7 @@ onActivated(() => {
 
 </script>
 
-<style>
+<style scoped>
 .el-button {
   background-color: var(--el-button-bg-color, var(--el-color-white))
 }
