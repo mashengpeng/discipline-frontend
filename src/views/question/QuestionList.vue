@@ -3,31 +3,36 @@
              class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-16 lg:top-16'
              size='large' @click='showAdd'>
     <el-icon size='30'>
-      <circle-plus />
+      <circle-plus/>
     </el-icon>
   </el-button>
 
   <el-button
-    circle
-    class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32 lg:top-32'
-    size='large' @click='$router.push("/question/random")'>
+      circle
+      class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32 lg:top-32'
+      size='large' @click='$router.push("/question/random")'>
     <el-icon size='30'>
-      <refresh-left />
+      <refresh-left/>
     </el-icon>
   </el-button>
 
   <el-dialog
-    v-model='addVisible'
-    :title='text.title[progress]'
-    width='900px'
+      v-model='addVisible'
+      :title='text.title[progress]'
+      width='900px'
   >
     <el-input v-if='progress === 0' v-model='importContent' :autosize='{ minRows: 20, maxRows: 20}' autosize
               placeholder='请输入内容' type='textarea'>
     </el-input>
     <div v-else>
       <el-scrollbar height='430px'>
-        <el-checkbox v-for='e in confirmContent' v-model='e.checked' :label='e.title' class='block'
-                     size='large'></el-checkbox>
+
+        <div v-for='e in confirmContent' class="flex mb-4">
+          <el-checkbox-button v-model='e.checked' class="mr-4" label="check" size='large'></el-checkbox-button>
+          <el-input v-model="e.title"></el-input>
+        </div>
+
+
       </el-scrollbar>
 
     </div>
@@ -58,17 +63,17 @@
 </template>
 
 <script setup>
-import { onActivated, ref } from 'vue';
+import {onActivated, ref} from 'vue';
 import http from '@/utils/http';
-import { CirclePlus, RefreshLeft } from '@element-plus/icons-vue';
-import { ElNotification } from 'element-plus';
+import {CirclePlus, RefreshLeft} from '@element-plus/icons-vue';
+import {ElNotification} from 'element-plus';
 
 const data = ref(null);
 const addVisible = ref(false);
 const importContent = ref('');
 const progress = ref(0);
 const confirmContent = ref([]);
-const text = ref({ title: ['导入问题', '选择导入'], button: ['下一步', '确认'] });
+const text = ref({title: ['导入问题', '选择导入'], button: ['下一步', '确认']});
 
 const showAdd = () => {
   addVisible.value = true;
@@ -76,16 +81,17 @@ const showAdd = () => {
 };
 const loadData = () => {
   http.post('/question/list').then(
-    (res) => {
-      data.value = res.data;
-    },
-    () => {
-    },
+      (res) => {
+        data.value = res.data;
+      },
+      () => {
+      },
   );
 };
+
 onActivated(() => {
   loadData();
-});
+})
 
 const prev = () => {
   if (progress.value !== 0) {
@@ -113,17 +119,17 @@ const next = () => {
     return;
   }
   http.post('/question/import/list', confirmContent.value).then(
-    (res) => {
-      addVisible.value = false;
-      loadData();
-      importContent.value = '';
-      ElNotification({
-        title: '导入成功',
-        type: 'success',
-      });
-    },
-    () => {
-    },
+      (res) => {
+        addVisible.value = false;
+        loadData();
+        importContent.value = '';
+        ElNotification({
+          title: '导入成功',
+          type: 'success',
+        });
+      },
+      () => {
+      },
   );
 };
 
