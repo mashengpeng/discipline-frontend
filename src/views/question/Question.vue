@@ -52,7 +52,7 @@
   <el-dialog
       v-model='editVisible'
       :title='text.title[progress]'
-      width='35%'
+      width='900px'
   >
     <el-input v-if='progress === 0' v-model='editedQuestion.answer' :autosize='{ minRows: 20, maxRows: 20}' autosize
               placeholder='请输入内容' type='textarea'>
