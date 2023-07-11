@@ -7,13 +7,15 @@
     </el-icon>
   </el-button>
 
-  <div v-if="data?.length > 0">
-    <el-drawer v-model='visible' :before-close='confirmAdd' :destroy-on-close='true' :withHeader='false'
-               size='100%' title='编辑文章' @opened='renderEditor'>
-      <div id='editContainer' class='shadow-2xl'>
-      </div>
+  <el-drawer v-model='visible' :before-close='confirmAdd' :destroy-on-close='true' :withHeader='false'
+             size='100%' @opened='renderEditor'>
+    <div id='editContainer' class='shadow-2xl'>
+    </div>
 
-    </el-drawer>
+  </el-drawer>
+
+  <div v-if="data?.length > 0">
+
 
     <div class='overflow-hidden'>
       <el-card v-for='article in data' :key='article.id' :body-style="{ padding: '0px' }"
