@@ -15,6 +15,15 @@
     </el-icon>
   </el-button>
 
+  <el-button circle
+             class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-48 lg:top-48'
+             size='large' @click='deleteArticle'>
+    <el-icon>
+      <view />
+    </el-icon>
+  </el-button>
+
+
   <el-drawer v-model='visible' :before-close='confirmEdit' :destroy-on-close='true' :withHeader='false' class=''
              size='90%'
              title='编辑文章' @opened='renderEditor'>
@@ -59,7 +68,7 @@
 
 import { onActivated, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Delete, Edit } from '@element-plus/icons-vue';
+import { Delete, Edit, View } from '@element-plus/icons-vue';
 import http from '@/utils/http';
 import Cherry from 'cherry-markdown';
 import 'cherry-markdown/dist/cherry-markdown.min.css';
@@ -186,9 +195,6 @@ onActivated(() => {
 });
 
 const renderEditor = () => {
-  ElNotification({
-    message: '正在编辑,可按ESC退出',
-  });
   editCherry.value = new Cherry({
     id: 'editContainer',
     value: editedArticle.value.content,

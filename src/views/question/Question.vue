@@ -123,7 +123,7 @@
     </div>
 
     <el-text v-if='!foldAnswer' class='whitespace-pre-wrap' size='large'>
-      {{ question.answer }}
+      {{ question.answer.length > 0 ? question.answer.length : '还没有答案,快去编写吧~' }}
     </el-text>
   </div>
   <el-empty v-else class='mt-8' description='暂无题目'></el-empty>

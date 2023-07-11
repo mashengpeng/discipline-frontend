@@ -35,18 +35,22 @@
           </el-button>
 
           <router-view v-slot='{ Component }'>
-            <keep-alive>
-              <component
-                :is='Component'
-                v-if='$route.meta.keepAlive'
-                :key='$route.path'
-              />
-            </keep-alive>
-            <component
-              :is='Component'
-              v-if='!$route.meta.keepAlive'
-              :key='$route.path'
-            />
+            <Transition>
+              <div>
+                <keep-alive>
+                  <component
+                    :is='Component'
+                    v-if='$route.meta.keepAlive'
+                    :key='$route.path'
+                  />
+                </keep-alive>
+                <component
+                  :is='Component'
+                  v-if='!$route.meta.keepAlive'
+                  :key='$route.path'
+                />
+              </div>
+            </Transition>
           </router-view>
 
 

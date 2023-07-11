@@ -98,13 +98,12 @@ export const router = createRouter({
   //routes: mainRoutes,
   // 是否应该禁止尾部斜杠。默认为假
   strict: true,
-  // scrollBehavior(to, from, savedPosition) {
-  //     if (to.hash) {
-  //         return {
-  //             el: to.hash,
-  //         }
-  //     }
-  // },
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition && to.meta.keepAlive) {
+      return savedPosition;
+    }
+    return { x: 0, y: 0 };
+  },
 });
 
 router.beforeEach((to, from, next) => {
