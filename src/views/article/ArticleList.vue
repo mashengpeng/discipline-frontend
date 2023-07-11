@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import {ref, watchEffect} from 'vue';
+import {onActivated, onDeactivated, ref, watchEffect} from 'vue';
 import myAxios from '@/utils/http';
 import http from '@/utils/http';
 import {dayjs, ElMessageBox, ElNotification} from 'element-plus';
@@ -91,7 +91,6 @@ const newArticle = ref({content: ''});
 const cherryInstance = ref(null);
 const route = useRoute()
 const router = useRouter()
-const keyword = ref(route.query.keyword);
 
 const tagClick = (e) => {
   router.push({path: '/article/list', query: {keyword: e}})
@@ -142,7 +141,7 @@ const upsertArticle = () => {
 };
 
 const loadData = () => {
-  let suffix = keyword.value ? '?keyword=' + keyword.value : ''
+  let suffix = route.query.keyword ? '?keyword=' + route.query.keyword : ''
   myAxios.post(`/article/list${suffix}`).then(
       (res) => {
         data.value = res.data;
@@ -152,8 +151,14 @@ const loadData = () => {
   );
 };
 
-watchEffect(() => {
-  loadData();
+let unwatch;
+onActivated(() => {
+  unwatch = watchEffect(() => {
+    loadData();
+  })
+})
+onDeactivated(() => {
+  unwatch()
 })
 
 
