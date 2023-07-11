@@ -42,7 +42,8 @@ deploy:
     - ssh-keyscan 124.220.184.27 >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 
-    - scp -r dist/* root@124.220.184.27:/docker/nginx/html
+    - apt-get install -y rsync
+    - rsync -cvrh --progress --inplace --compress-level=9 dist/* root@124.220.184.27:/docker/nginx/html
 
 
 
