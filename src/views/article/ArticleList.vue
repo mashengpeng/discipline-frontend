@@ -39,7 +39,11 @@
               <span v-if='article.tag'>
               <el-divider direction='vertical'/>
               <el-space>
-                <el-tag v-for="(e, index) in article.tag.split(',')">{{ e }}</el-tag>
+                <el-tag v-for="(e, index) in article.tag.split(',')"
+                        class="hover:cursor-pointer"
+                        @click="tagClick(e)">
+                  {{ e }}
+                </el-tag>
               </el-space>
             </span>
             </div>
@@ -62,7 +66,7 @@
 </template>
 
 <script setup>
-import {onActivated, ref} from 'vue';
+import {ref, watchEffect} from 'vue';
 import myAxios from '@/utils/http';
 import http from '@/utils/http';
 import {dayjs, ElMessageBox, ElNotification} from 'element-plus';
@@ -73,6 +77,7 @@ import {DocumentAdd} from '@element-plus/icons-vue';
 
 import Cherry from 'cherry-markdown';
 import 'cherry-markdown/dist/cherry-markdown.min.css';
+import {useRoute, useRouter} from "vue-router";
 
 
 dayjs.extend(relativeTime);
@@ -82,6 +87,14 @@ const visible = ref(false);
 const data = ref([]);
 const newArticle = ref({content: ''});
 const cherryInstance = ref(null);
+const route = useRoute()
+const router = useRouter()
+const keyword = ref(route.query.keyword);
+
+const tagClick = (e) => {
+  router.push({path: '/article/list', query: {keyword: e}})
+};
+
 
 const renderEditor = () => {
   cherryInstance.value = new Cherry({
@@ -127,7 +140,8 @@ const upsertArticle = () => {
 };
 
 const loadData = () => {
-  myAxios.post('/article/list').then(
+  let suffix = keyword.value ? '?keyword=' + keyword.value : ''
+  myAxios.post(`/article/list${suffix}`).then(
       (res) => {
         data.value = res.data;
       },
@@ -136,9 +150,10 @@ const loadData = () => {
   );
 };
 
-onActivated(() => {
+watchEffect(() => {
   loadData();
-});
+})
+
 
 </script>
 
