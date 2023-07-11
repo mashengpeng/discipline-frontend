@@ -7,59 +7,62 @@
     </el-icon>
   </el-button>
 
-  <el-button
-      circle
-      class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32 lg:top-32'
-      size='large' @click='$router.push("/question/random")'>
-    <el-icon size='30'>
-      <refresh-left/>
-    </el-icon>
-  </el-button>
+  <div v-if="data?.length > 0">
+    <el-button
+        circle
+        class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32 lg:top-32'
+        size='large' @click='$router.push("/question/random")'>
+      <el-icon size='30'>
+        <refresh-left/>
+      </el-icon>
+    </el-button>
 
-  <el-dialog
-      v-model='addVisible'
-      :title='text.title[progress]'
-      width='900px'
-  >
-    <el-input v-if='progress === 0' v-model='importContent' :autosize='{ minRows: 20, maxRows: 20}' autosize
-              placeholder='请输入内容' type='textarea'>
-    </el-input>
-    <div v-else>
-      <el-scrollbar height='430px'>
+    <el-dialog
+        v-model='addVisible'
+        :title='text.title[progress]'
+        width='900px'
+    >
+      <el-input v-if='progress === 0' v-model='importContent' :autosize='{ minRows: 20, maxRows: 20}' autosize
+                placeholder='请输入内容' type='textarea'>
+      </el-input>
+      <div v-else>
+        <el-scrollbar height='430px'>
 
-        <div v-for='e in confirmContent' class="flex mb-4">
-          <el-checkbox-button v-model='e.checked' class="mr-4" label="check" size='large'></el-checkbox-button>
-          <el-input v-model="e.title"></el-input>
-        </div>
-
-
-      </el-scrollbar>
-
-    </div>
+          <div v-for='e in confirmContent' class="flex mb-4">
+            <el-checkbox-button v-model='e.checked' class="mr-4" label="check" size='large'></el-checkbox-button>
+            <el-input v-model="e.title"></el-input>
+          </div>
 
 
-    <template #footer>
-      <div class='w-full'>
-        <el-steps :active='progress' :space='200' finish-status='success' simple>
-          <el-step icon='el-icon-edit' title='添加'></el-step>
-          <el-step icon='el-icon-upload' title='确认'></el-step>
-        </el-steps>
+        </el-scrollbar>
+
       </div>
-      <el-button v-show='progress !== 0' size='large' style='margin-top: 12px;' @click='prev'>上一步</el-button>
-      <el-button class='mt-4' size='large' @click='next'>{{ text.button[progress] }}</el-button>
-    </template>
-
-  </el-dialog>
 
 
-  <el-card v-for='question in data' :key='question.id' :body-style="{ padding: '0px' }"
-           class='box-card border-0 m-1 p-4 hover:cursor-pointer'
-           shadow='hover' @click='$router.push(`/question/${question.id}`)'>
-    <div>
-      {{ question.title }}
-    </div>
+      <template #footer>
+        <div class='w-full'>
+          <el-steps :active='progress' :space='200' finish-status='success' simple>
+            <el-step icon='el-icon-edit' title='添加'></el-step>
+            <el-step icon='el-icon-upload' title='确认'></el-step>
+          </el-steps>
+        </div>
+        <el-button v-show='progress !== 0' size='large' style='margin-top: 12px;' @click='prev'>上一步</el-button>
+        <el-button class='mt-4' size='large' @click='next'>{{ text.button[progress] }}</el-button>
+      </template>
 
-  </el-card>
+    </el-dialog>
+
+
+    <el-card v-for='question in data' :key='question.id' :body-style="{ padding: '0px' }"
+             class='box-card border-0 m-1 p-4 hover:cursor-pointer'
+             shadow='hover' @click='$router.push(`/question/${question.id}`)'>
+      <div>
+        {{ question.title }}
+      </div>
+
+    </el-card>
+  </div>
+  <el-empty v-else class="mt-8" description="暂无题目"></el-empty>
 </template>
 
 <script setup>

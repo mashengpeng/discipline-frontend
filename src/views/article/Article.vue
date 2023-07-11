@@ -208,7 +208,6 @@ const renderEditor = () => {
   box-shadow: none;
   background-color: white;
 }
-
 </style>
 
 <style scoped>
