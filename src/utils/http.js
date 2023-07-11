@@ -3,7 +3,8 @@ import {ElNotification} from 'element-plus';
 
 // 创建axios实例
 const instance = axios.create({
-  baseURL: 'http://124.220.184.27:8888',
+  // baseURL: 'http://124.220.184.27:8888',
+  baseURL: process.env.VUE_APP_URL,
   timeout: 100000,
 });
 
