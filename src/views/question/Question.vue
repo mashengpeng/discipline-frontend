@@ -1,5 +1,5 @@
 <template>
-  <div v-if='question.id' class='p-4'>
+  <div v-if='question.id' class='pl-4 pr-4'>
     <el-button circle
                class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-16 lg:top-16'
                size='large' @click='$router.push("/question/list")'>
@@ -54,7 +54,8 @@
       v-model='editVisible'
       :show-close='true'
       :title='text.title[progress]'
-      width='900px'
+      class='w-screen md:w-[900px]'
+
     >
       <div v-if='progress === 0'>
         <el-input v-model='editedQuestion.title' class='mb-4' placeholder='题目'></el-input>
@@ -96,7 +97,7 @@
         <el-button class='mt-4' size='large' @click='next'>{{ text.button[progress] }}</el-button>
       </template>
     </el-dialog>
-    <div class='text-xl font-bold mt-8 mb-4'>
+    <div class='text-xl font-bold mb-4'>
       {{ question.title }}
     </div>
 
