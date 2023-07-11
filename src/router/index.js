@@ -41,7 +41,7 @@ const toolsRoutes = [
   },
   {
     path: '/tools/todo',
-    component: () => import('@/views/Todo.vue'),
+    component: () => import('@/views/tools/Todo.vue'),
     meta: { title: '代办事项', keepAlive: true },
   },
 ];

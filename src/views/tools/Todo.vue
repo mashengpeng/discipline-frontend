@@ -46,14 +46,13 @@
   <el-table :data='data'>
     <el-table-column label='事项' prop='title' />
     <el-table-column label='描述' prop='description' />
-    <el-table-column label='持续时间' prop='duration' />
     <el-table-column label='倒计时' prop='deadline'>
       <template #default='scope'>
         <el-countdown v-if='scope.row.deadline && scope.row.deadline >= dayjs()' :value='dayjs(scope.row.deadline)' />
         <div v-else />
       </template>
     </el-table-column>
-    <el-table-column align='right' fixed='right' label='' width='240px'>
+    <el-table-column align='right' label='' width='240px'>
       <template #default='scope'>
         <CheckButton v-show="activeTab === 'undone'" @click='completeItem(scope.row)' />
         <EditButton v-show="activeTab === 'undone'" @click='editItem(scope.row)' />
