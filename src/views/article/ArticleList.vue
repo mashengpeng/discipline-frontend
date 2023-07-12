@@ -3,7 +3,7 @@
              class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-16 lg:top-16'
              size='large' @click='visible = true'>
     <el-icon size='30'>
-      <document-add />
+      <document-add/>
     </el-icon>
   </el-button>
 
@@ -15,11 +15,9 @@
   </el-drawer>
 
 
-  <div v-if='data?.length > 0'>
-
-
+  <div v-if='data?.total !== 0'>
     <div class='overflow-hidden'>
-      <el-card v-for='article in data' :key='article.id' :body-style="{ padding: '0px' }"
+      <el-card v-for='article in data.records' :key='article.id' :body-style="{ padding: '0px' }"
                class='box-card border-0 m-1 p-4'
                shadow='hover'>
         <div class='flex justify-between w-full'>
@@ -29,18 +27,18 @@
             </div>
             <div class='text-gray-400 text-sm'>
               发布于 : {{ dayjs(article.createTime).format('YYYY-MM-DD HH:mm') }}
-              <el-divider direction='vertical' />
+              <el-divider direction='vertical'/>
               最近浏览 : {{ dayjs(article.updateTime).fromNow() }}
-              <el-divider direction='vertical' />
+              <el-divider direction='vertical'/>
               <svg height='16px' style='display: inline' viewBox='0 0 1024 1024' width='16px'
                    xmlns='http://www.w3.org/2000/svg'>
                 <path
-                  d='M512 160c320 0 512 352 512 352S832 864 512 864 0 512 0 512s192-352 512-352zm0 64c-225.28 0-384.128 208.064-436.8 288 52.608 79.872 211.456 288 436.8 288 225.28 0 384.128-208.064 436.8-288-52.608-79.872-211.456-288-436.8-288zm0 64a224 224 0 1 1 0 448 224 224 0 0 1 0-448zm0 64a160.192 160.192 0 0 0-160 160c0 88.192 71.744 160 160 160s160-71.808 160-160-71.744-160-160-160z'
-                  fill='currentColor'></path>
+                    d='M512 160c320 0 512 352 512 352S832 864 512 864 0 512 0 512s192-352 512-352zm0 64c-225.28 0-384.128 208.064-436.8 288 52.608 79.872 211.456 288 436.8 288 225.28 0 384.128-208.064 436.8-288-52.608-79.872-211.456-288-436.8-288zm0 64a224 224 0 1 1 0 448 224 224 0 0 1 0-448zm0 64a160.192 160.192 0 0 0-160 160c0 88.192 71.744 160 160 160s160-71.808 160-160-71.744-160-160-160z'
+                    fill='currentColor'></path>
               </svg>
               {{ article.viewCount }}
               <span v-if='article.tag'>
-              <el-divider direction='vertical' />
+              <el-divider direction='vertical'/>
               <el-space>
                 <el-tag v-for="(e, index) in article.tag.split(',')"
                         class='hover:cursor-pointer'
@@ -62,22 +60,26 @@
         </div>
       </el-card>
     </div>
+    <div class="flex justify-center">
+      <el-pagination v-model:current-page="data.current" :page-size="data.size" :total="data.total" hide-on-single-page
+                     layout="prev, pager, next" @current-change="pageChange"></el-pagination>
+    </div>
   </div>
   <el-empty v-else class='mt-8' description='暂无文章'></el-empty>
 
 </template>
 
 <script setup>
-import { onActivated, onDeactivated, ref, watchEffect } from 'vue';
+import {onActivated, onDeactivated, ref, watchEffect} from 'vue';
 import myAxios from '@/utils/http';
 import http from '@/utils/http';
-import { dayjs, ElMessageBox, ElNotification } from 'element-plus';
+import {dayjs, ElMessageBox, ElNotification} from 'element-plus';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
-import { DocumentAdd } from '@element-plus/icons-vue';
+import {DocumentAdd} from '@element-plus/icons-vue';
 import Cherry from 'cherry-markdown';
 import 'cherry-markdown/dist/cherry-markdown.min.css';
-import { useRoute, useRouter } from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 import editor_config from '@/config/cherry-config';
 
 
@@ -85,16 +87,19 @@ dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');
 
 const visible = ref(false);
-const data = ref([]);
-const newArticle = ref({ content: '' });
+const data = ref({});
+const newArticle = ref({content: ''});
 const cherryInstance = ref(null);
 const route = useRoute();
 const router = useRouter();
 
 const tagClick = (e) => {
-  router.push({ path: '/article/list', query: { keyword: e } });
+  router.push({path: '/article/list', query: {keyword: e}});
 };
 
+const pageChange = () => {
+  router.push({path: '/article/list', query: {...route.query, pageNum: data.value.current,}});
+}
 
 const renderEditor = () => {
   cherryInstance.value = new Cherry({
@@ -115,39 +120,46 @@ const confirmAdd = (exit) => {
     cancelButtonText: '取 消',
     type: 'info',
   })
-    .then(() => {
-      upsertArticle();
-      exit();
-    })
-    .catch(() => {
-      exit();
-    });
+      .then(() => {
+        upsertArticle();
+        exit();
+      })
+      .catch(() => {
+        exit();
+      });
 };
 
 const upsertArticle = () => {
   http.post('/article/upsert', newArticle.value).then(
-    (res) => {
-      loadData();
-      newArticle.value.content = '';
-      ElNotification({
-        title: '已上传',
-        message: '新文章添加成功',
-        type: 'success',
-      });
-    },
-    () => {
-    },
+      (res) => {
+        loadData();
+        newArticle.value.content = '';
+        ElNotification({
+          title: '已上传',
+          message: '新文章添加成功',
+          type: 'success',
+        });
+      },
+      () => {
+      },
   );
 };
 
 const loadData = () => {
-  let suffix = route.query.keyword ? '?keyword=' + route.query.keyword : '';
-  myAxios.post(`/article/list${suffix}`).then(
-    (res) => {
-      data.value = res.data;
-    },
-    () => {
-    },
+  myAxios.post(`/article/list`, {},
+      {
+        params: {
+          keyword: route.query.keyword,
+          pageSize: route.query.pageSize,
+          pageNum: route.query.pageNum,
+        }
+      }
+  ).then(
+      (res) => {
+        data.value = res.data;
+      },
+      () => {
+      },
   );
 };
 
@@ -157,6 +169,9 @@ onActivated(() => {
     loadData();
   });
 });
+// watch(data.value.current, () => {
+//   router.push({path: '/article/list', query: {pageNum: data.value.current, ...route.query}});
+// })
 onDeactivated(() => {
   unwatch();
 });
