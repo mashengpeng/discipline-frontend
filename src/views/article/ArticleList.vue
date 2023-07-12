@@ -59,9 +59,9 @@
       </el-card>
     </div>
     <div class="flex justify-center mt-4">
-      <el-pagination v-model:current-page="data.current" v-model:page-size="data.size" :total="data.total"
-                     hide-on-single-page
-                     layout='sizes, prev, pager, next, jumper, ->, total' @current-change="currentChange"
+      <el-pagination v-model:current-page="data.current" v-model:page-size="data.size" :layout='layout'
+                     :total="data.total"
+                     hide-on-single-page @current-change="currentChange"
                      @size-change="sizeChange"></el-pagination>
     </div>
   </div>
@@ -92,6 +92,7 @@ const newArticle = ref({content: ''});
 const cherryInstance = ref(null);
 const route = useRoute();
 const router = useRouter();
+let layout;
 
 const tagClick = (e) => {
   router.push({path: '/article/list', query: {...route.query, keyword: e}});
@@ -170,6 +171,7 @@ const loadData = () => {
 
 let unwatch;
 onActivated(() => {
+  layout = window.innerWidth > 750 ? 'sizes, prev, pager, next, jumper, ->, total' : 'prev, pager, next'
   unwatch = watchEffect(() => {
     loadData();
   });
