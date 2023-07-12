@@ -55,7 +55,7 @@ const articleRoutes = [
     },
     {
         path: '/article/:id',
-        component: import('@/views/article/Article.vue'),
+        component: () => import('@/views/article/Article.vue'),
         meta: {title: '文章', keepAlive: true},
     },
 ];
