@@ -54,7 +54,7 @@
     </el-button>
 
     <el-card v-for='question in data.records' :key='question.id' :body-style="{ padding: '0px' }"
-             class='box-card border-0 m-1 p-4 hover:cursor-pointer h-[60px]'
+             class='box-card border-0 m-1 p-4 hover:cursor-pointer'
              shadow='hover' @click='$router.push(`/question/${question.id}`)'>
       <div>
         {{ question.title }}

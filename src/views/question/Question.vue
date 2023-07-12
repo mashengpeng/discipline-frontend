@@ -68,7 +68,7 @@
       <div v-else>
         <Diff
             :current='editedQuestion.title'
-            :folding='false'
+            :folding='true'
             :prev='question.title'
             :virtual-scroll='true'
             class='h-[60px]'
@@ -77,7 +77,7 @@
         />
         <Diff
             :current='editedQuestion.answer'
-            :folding='false'
+            :folding='true'
             :prev='question.answer'
             :virtual-scroll='true'
             class='h-[375px]'

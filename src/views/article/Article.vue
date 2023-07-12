@@ -184,6 +184,18 @@ onMounted(() => {
     toolbars: {
       toolbar: false
     },
+    codeBlock: {
+      theme: 'light', // 默认为深色主题
+      wrap: false, // 超出长度是否换行，false则显示滚动条
+      lineNumber: true, // 默认显示行号
+      indentedCodeBlock: true,
+    },
+    global: {
+      // 是否启用经典换行逻辑
+      // true：一个换行会被忽略，两个以上连续换行会分割成段落，
+      // false： 一个换行会转成<br>，两个连续换行会分割成段落，三个以上连续换行会转成<br>并分割段落
+      classicBr: true,
+    },
     editor: {
       defaultModel: "previewOnly"
     },
