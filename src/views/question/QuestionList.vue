@@ -3,14 +3,14 @@
              class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-16 lg:top-16'
              size='large' @click='showAdd'>
     <el-icon size='30'>
-      <circle-plus />
+      <circle-plus/>
     </el-icon>
   </el-button>
 
   <el-dialog
-    v-model='addVisible'
-    :title='text.title[progress]'
-    class='w-screen md:w-[900px]'
+      v-model='addVisible'
+      :title='text.title[progress]'
+      class='w-screen md:w-[900px]'
   >
     <el-input v-if='progress === 0' v-model='importContent' :autosize='{ minRows: 20, maxRows: 20}' autosize
               placeholder='请输入内容' type='textarea'>
@@ -43,58 +43,92 @@
   </el-dialog>
 
 
-  <div v-if='data?.length > 0'>
+  <div v-if='data?.total !== 0'>
     <el-button
-      circle
-      class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32 lg:top-32'
-      size='large' @click='$router.push("/question/random")'>
+        circle
+        class='shadow fixed z-50 right-[4px] xl:right-[calc(50vw-600px)] bottom-32 lg:top-32'
+        size='large' @click='$router.push("/question/random")'>
       <el-icon size='30'>
-        <refresh-left />
+        <refresh-left/>
       </el-icon>
     </el-button>
 
-    <el-card v-for='question in data' :key='question.id' :body-style="{ padding: '0px' }"
-             class='box-card border-0 m-1 p-4 hover:cursor-pointer'
+    <el-card v-for='question in data.records' :key='question.id' :body-style="{ padding: '0px' }"
+             class='box-card border-0 m-1 p-4 hover:cursor-pointer h-[60px]'
              shadow='hover' @click='$router.push(`/question/${question.id}`)'>
       <div>
         {{ question.title }}
       </div>
-
     </el-card>
+    <div class="flex justify-center mt-4">
+      <el-pagination v-model:current-page="data.current" v-model:page-size="data.size" :layout='layout'
+                     :page-sizes="[15, 20, 30, 50, 100]"
+                     :total="data.total" hide-on-single-page
+                     @current-change="currentChange"
+                     @size-change="sizeChange"></el-pagination>
+    </div>
   </div>
   <el-empty v-else class='mt-8' description='暂无题目'></el-empty>
 </template>
 
 <script setup>
-import { onActivated, ref } from 'vue';
+import {onActivated, onDeactivated, ref, watchEffect} from 'vue';
 import http from '@/utils/http';
-import { CirclePlus, RefreshLeft } from '@element-plus/icons-vue';
-import { ElNotification } from 'element-plus';
+import {CirclePlus, RefreshLeft} from '@element-plus/icons-vue';
+import {ElNotification} from 'element-plus';
+import {useRoute, useRouter} from "vue-router";
 
-const data = ref(null);
+const data = ref({total: 0});
 const addVisible = ref(false);
 const importContent = ref('');
 const progress = ref(0);
 const confirmContent = ref([]);
-const text = ref({ title: ['导入问题', '选择导入'], button: ['下一步', '确认'] });
+const text = ref({title: ['导入问题', '选择导入'], button: ['下一步', '确认']});
+const route = useRoute();
+const router = useRouter();
 
+let layout;
+let defaultSize;
 const showAdd = () => {
   addVisible.value = true;
   progress.value = 0;
 };
 const loadData = () => {
-  http.post('/question/list').then(
-    (res) => {
-      data.value = res.data;
-    },
-    () => {
-    },
+  http.post('/question/list', {}, {
+    params: {
+      keyword: route.query.keyword,
+      size: route.query.size ? route.query.size : defaultSize,
+      current: route.query.current,
+    }
+  }).then(
+      (res) => {
+        data.value = res.data;
+      },
+      () => {
+      },
   );
 };
 
+let unwatch;
 onActivated(() => {
-  loadData();
+  layout = window.innerWidth > 750 ? 'sizes, prev, pager, next, jumper, ->, total' : 'prev, pager, next'
+  defaultSize = Math.floor((window.innerHeight - 150) / 65);
+  unwatch = watchEffect(() => {
+    loadData();
+  });
 });
+
+onDeactivated(() => {
+  unwatch();
+});
+
+const currentChange = () => {
+  router.push({path: '/question/list', query: {...route.query, size: data.value.size, current: data.value.current}});
+}
+
+const sizeChange = () => {
+  router.push({path: '/question/list', query: {...route.query, size: data.value.size, current: data.value.current}});
+}
 
 const prev = () => {
   if (progress.value !== 0) {
@@ -122,17 +156,17 @@ const next = () => {
     return;
   }
   http.post('/question/import/list', confirmContent.value).then(
-    (res) => {
-      addVisible.value = false;
-      loadData();
-      importContent.value = '';
-      ElNotification({
-        title: '导入成功',
-        type: 'success',
-      });
-    },
-    () => {
-    },
+      (res) => {
+        addVisible.value = false;
+        loadData();
+        importContent.value = '';
+        ElNotification({
+          title: '导入成功',
+          type: 'success',
+        });
+      },
+      () => {
+      },
   );
 };
 

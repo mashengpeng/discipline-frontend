@@ -11,9 +11,7 @@
              size='90%' @opened='renderEditor'>
     <div id='editContainer' class='shadow-2xl'>
     </div>
-
   </el-drawer>
-
 
   <div v-if='data?.total !== 0'>
     <div class='overflow-hidden'>
@@ -60,9 +58,11 @@
         </div>
       </el-card>
     </div>
-    <div class="flex justify-center">
-      <el-pagination v-model:current-page="data.current" :page-size="data.size" :total="data.total" hide-on-single-page
-                     layout="prev, pager, next" @current-change="pageChange"></el-pagination>
+    <div class="flex justify-center mt-4">
+      <el-pagination v-model:current-page="data.current" v-model:page-size="data.size" :total="data.total"
+                     hide-on-single-page
+                     layout='sizes, prev, pager, next, jumper, ->, total' @current-change="currentChange"
+                     @size-change="sizeChange"></el-pagination>
     </div>
   </div>
   <el-empty v-else class='mt-8' description='暂无文章'></el-empty>
@@ -87,19 +87,24 @@ dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');
 
 const visible = ref(false);
-const data = ref({});
+const data = ref({total: 0});
 const newArticle = ref({content: ''});
 const cherryInstance = ref(null);
 const route = useRoute();
 const router = useRouter();
 
 const tagClick = (e) => {
-  router.push({path: '/article/list', query: {keyword: e}});
+  router.push({path: '/article/list', query: {...route.query, keyword: e}});
 };
 
-const pageChange = () => {
-  router.push({path: '/article/list', query: {...route.query, pageNum: data.value.current,}});
+const currentChange = () => {
+  router.push({path: '/article/list', query: {...route.query, size: data.value.size, current: data.value.current}});
 }
+
+const sizeChange = () => {
+  router.push({path: '/article/list', query: {...route.query, size: data.value.size, current: data.value.current}});
+}
+
 
 const renderEditor = () => {
   cherryInstance.value = new Cherry({
@@ -150,8 +155,8 @@ const loadData = () => {
       {
         params: {
           keyword: route.query.keyword,
-          pageSize: route.query.pageSize,
-          pageNum: route.query.pageNum,
+          size: route.query.size,
+          current: route.query.current,
         }
       }
   ).then(
@@ -169,9 +174,7 @@ onActivated(() => {
     loadData();
   });
 });
-// watch(data.value.current, () => {
-//   router.push({path: '/article/list', query: {pageNum: data.value.current, ...route.query}});
-// })
+
 onDeactivated(() => {
   unwatch();
 });

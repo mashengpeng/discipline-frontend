@@ -1,7 +1,7 @@
 // 移动端配置
 const editor_config = {
     editor: {
-        defaultModel: screen.width > 1280 ? 'edit&preview' : 'editOnly',
+        defaultModel: window.innerWidth > 1280 ? 'edit&preview' : 'editOnly',
         height: '100%',
     },
     toolbars: {
@@ -44,7 +44,7 @@ const editor_config = {
     },
 };
 
-if (screen.width < 1280) {
+if (window.innerWidth < 1280) {
     editor_config.toolbars.toolbar = [
         '|',
         'bold',
